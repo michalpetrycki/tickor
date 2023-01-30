@@ -1,0 +1,39 @@
+services:
+  db-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: db-server
+    networks:
+      - tocker_network
+    ports:
+      - "1444:1433"
+    environment:
+      SA_PASSWORD: "costam@711"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./data/db:/usr/app/data
+      - ./../sql:/tmp/sql
+    command: /bin/bash /tmp/sql/entrypoint.sh
+  web-app:
+    build: 
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    container_name: web-app
+    networks: 
+      - tocker_network
+    ports:
+      - 9999:9999
+    volumes:
+      - ./..:/opt/project
+      - /opt/project/docker
+      - ./data/app:/tmp/tocker_local_storage
+    depends_on:
+      - db-server
+    tty: true
+networks:
+  tocker_network:
+    name: tocker_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.69.0/24
