@@ -1,7 +1,8 @@
 {
-    "dbName": "mssql",
+    "dbName": "Tickor",
     "dbConfig": {
-        "server": "127.0.0.1",
+        "__server": "127.0.0.1",
+        "server": "localhost",
         "options": {
             "port": 1433,
             "trustServerCertificate": true
@@ -9,7 +10,7 @@
         "authentication": {
             "type": "default",
             "options": {
-                "userName": "sa",
+                "username": "sa",
                 "password": "costam@711"
             }
         }

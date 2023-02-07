@@ -1,9 +1,10 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
+import connection from '@/utils/databaseConnection';
 
-const sequelize = new Sequelize('mssql');
+const sequelize = connection;
 
-class Person extends Model {
+class PersonModel extends Model {
     
     isPasswordValid(password: string): Promise<Error | boolean> {
 
@@ -19,28 +20,48 @@ class Person extends Model {
 
 }
 
-Person.init({
+PersonModel.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     username: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notNull: { msg: 'username is required' }
+        }
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        set: value => (value as string).trim()
+        set (value) {
+            this.setDataValue('email', (value as string).trim());
+        },
+        validate: {
+            isEmail: true,
+            notNull: { msg: 'email is required' }
+        }
+    },
+    kind: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            isIn: [[ 'administrator', 'robot', 'joe' ]]
+        }
     },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    role: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(64),
+        field: 'password_hash',
         allowNull: false
     }
 }, {
     sequelize,
+    freezeTableName: true,
     modelName: 'Person',
+    timestamps: false,
     hooks: {
         beforeCreate: async (person, options) => {
             try {
@@ -55,4 +76,4 @@ Person.init({
     }
 });
 
-export default Person;
+export default PersonModel;

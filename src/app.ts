@@ -6,14 +6,17 @@ import xXssProtection from 'x-xss-protection';
 import passport from 'passport';
 import httpStatus from 'http-status';
 // import config from './config/config';
-// import morgan from './config/morgan';
-// import jwtStrategy from './config/passport';
+import morgan from 'morgan';
+import jwtStrategy from './utils/config/passport';
 // import authLimiter from './middleware/rateLimiter';
 import tedious from 'tedious';
 import { Sequelize } from 'sequelize';
 import Controller from '@/utils/interfaces/Controller.interface';
-// import { dbName, dbConfig } from '../config.json';
-// import Controller from 'src/utils/interfaces/Controller.interface';
+import { dbName, dbConfig } from './utils/config/config.json';
+import PersonModel from '@/resources/person/person.model';
+import connection from '@/utils/databaseConnection';
+import ErrorMiddleware from '@/middleware/error.middleware';
+import PersonService from '@/resources/person/person.service';
 
 class App {
 
@@ -27,7 +30,8 @@ class App {
 
         this.initializeMiddleware();
         this.initializeControllers(controllers);
-        console.log('jabko');
+        this.initializeErrorHandling();
+        this.updateAdminAccount();
         // this.initializeDatabaseConnection();
 
     }
@@ -55,7 +59,10 @@ class App {
 
         // jwt authentication
         this.express.use(passport.initialize());
-        // passport.use('jwt', jwtStrategy);
+        passport.use('jwt', jwtStrategy);
+
+        // morgan - logging requested endpoint
+        this.express.use(morgan('tiny'));
 
         // if (config.env === 'production') {
         //     this.express.use('/v1/auth', authLimiter);
@@ -74,31 +81,33 @@ class App {
 
     }
 
-    // private initializeErrorHandling(): void{
+    private initializeErrorHandling(): void{
 
-    //     this.express.use(ErrorMiddleware);
+        this.express.use(ErrorMiddleware);
 
-    // }
+    }
 
-    // private async initializeDatabaseConnection(): Promise<void> {
+    private async initializeDatabaseConnection(): Promise<void> {
 
-    //     const dialect = 'mssql';
-    //     const host = dbConfig.server;
-    //     const { username, password } = dbConfig.authentication.options;
+        // const dialect = 'mssql';
+        // const host = dbConfig.server;
+        // const { username, password } = dbConfig.authentication.options;
 
-    //     // if database doesn't exist - create one
-    //     await this.ensureDbExists(dbName);
+        // // if database doesn't exist - create one
+        // await this.ensureDbExists(dbName);
 
-    //     // connect to db
-    //     const sequelize = new Sequelize(dbName, username, password, { host, dialect });
+        // // connect to db
+        // const sequelize = new Sequelize(dbName, username, password, { host, dialect });
 
-    //     // init models and add them to the exported db object
-    //     db.User = require('')(sequelize);
+        // // init models and add them to the exported db object
+        // const models = {
+        //     Person: PersonModel(sequelize, Sequelize.DataTypes)
+        // };
 
-    //     await sequelize.sync({ alter: true });
+        // await sequelize.sync({ alter: true });
 
 
-    // }
+    }
 
     // private async ensureDbExists(dbName: string): Promise <void | string> {
 
@@ -128,6 +137,13 @@ class App {
     //     });
 
     // }
+
+    public async updateAdminAccount(): Promise<void> {
+
+        const personService = new PersonService();
+        personService.updateAdminPassword();
+
+    }
 
     public listen(): void{
 

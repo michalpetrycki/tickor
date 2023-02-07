@@ -1,18 +1,21 @@
 import token from '@/utils/token';
 import Person from '@/resources/person/person.model';
+import PersonModel from '@/resources/person/person.model';
+import bcrypt from 'bcrypt';
+import { default as env } from '@/utils/config/config';
 
 class PersonService {
     
-    private person = Person;
+    private personModel = PersonModel;
 
     /**
      * Register a new user
      */
-    public async register(username: string, email: string, password: string, role: string): Promise<Error | string>{
+    public async register(username: string, email: string, password: string, kind: string): Promise<Error | string>{
         
         try {
 
-            const person = await this.person.create({ username, email, password, role });
+            const person = await this.personModel.create({ username, email, password, kind });
 
             const accessToken = token.createToken(person);
 
@@ -31,7 +34,7 @@ class PersonService {
     public async login(email: string, password: string): Promise<Error | string>{
         try {
             
-            const existingPerson = await this.person.findOne({ where: {  email } });
+            const existingPerson = await this.personModel.findOne({ where: {  email } });
 
             if (!existingPerson){
                 throw new Error('Unable to find person with that email address');
@@ -60,6 +63,49 @@ class PersonService {
         }
 
     };
+
+    public async getByEmail(email: string): Promise<Error | Person> {
+
+        try {
+            const existingPerson = await this.personModel.findOne({ where: {  email } });
+
+            if (!existingPerson){
+                throw new Error('Unable to find person with that email address');
+            }
+            else {
+                return existingPerson;
+            }
+
+        }
+        catch (error) {
+            throw new Error('no person with given email found');
+        }
+
+    }
+
+    public async updateAdminPassword(): Promise<void> {
+
+        const adminAccount = await this.getByEmail(env.adminEmail);
+
+        if (adminAccount instanceof PersonModel) {
+
+            if (adminAccount.getDataValue('password') === '') {
+                const salt = bcrypt.genSaltSync();
+                const hash = bcrypt.hashSync(env.adminPassword, salt);
+                adminAccount.setDataValue('password', hash);
+                adminAccount.save();
+                console.log('Admin password updated');
+            }
+            else {
+                console.log('Admin password already set')
+            }
+
+        }
+        else {
+            console.log('Admin account not found');
+        }
+
+    }
 
 }
 

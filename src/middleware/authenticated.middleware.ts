@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '@/utils/token';
-import UserModel from '@/resources/user/user.model';
 import Token from '@/utils/interfaces/token.interface';
 import HttpException from '@/utils/exceptions/http.exception';
 import jwt from 'jsonwebtoken';
+import Person from '@/resources/person/person.model';
 
 async function authenticatedMiddleware(req: Request, res: Response, next: NextFunction): Promise<Response | void>{
 
@@ -22,16 +22,20 @@ async function authenticatedMiddleware(req: Request, res: Response, next: NextFu
         if (payload instanceof jwt.JsonWebTokenError){
             return next(new HttpException(401, 'Unauthorized'));
         }
+        
+        const p = await Person.findByPk(payload.id + '');
+        const pp = p?.getDataValue('-password');
 
-        const user = await UserModel.findById(payload.id)
-                                    .select('-password')
-                                    .exec();
 
-        if (!user){
+        // const user = await UserModel.findById(payload.id)
+        //                             .select('-password')
+        //                             .exec();
+
+        if (!p){
             return next(new HttpException(401, 'Unauthorized'));
         }
 
-        req.user = user;
+        req.user = p;
 
         return next();
 
