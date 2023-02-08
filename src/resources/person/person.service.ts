@@ -83,6 +83,25 @@ class PersonService {
 
     }
 
+    public async getById(id: number): Promise<Error | Person> {
+
+        try {
+            const existingPerson = await this.personModel.findByPk(id);
+
+            if (!existingPerson){
+                throw new Error('id does not specify a valid person');
+            }
+            else {
+                return existingPerson;
+            }
+
+        }
+        catch (error) {
+            throw new Error('Error during fetching by id: ' + error);
+        }
+
+    }
+
     public async updateAdminPassword(): Promise<void> {
 
         const adminAccount = await this.getByEmail(env.adminEmail);

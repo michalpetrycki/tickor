@@ -6,6 +6,7 @@ import validate from '@/resources/person/person.validation';
 import PersonService from '@/resources/person/person.service';
 import authenticated from '@/middleware//authenticated.middleware';
 import status from 'http-status';
+import PersonModel from '@/resources/person/person.model';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class PersonController implements Controller {
@@ -32,8 +33,23 @@ class PersonController implements Controller {
             this.login
         );
 
-        this.router.get(`${this.path}/current`, authenticated, this.getPerson);
-        this.router.get(`${this.path}`, authenticated, this.getAll);
+        this.router.get(
+            `${this.path}/current`,
+            authenticated,
+            this.getPerson
+        );
+
+        this.router.get(
+            `${this.path}`,
+            authenticated,
+            this.getAll)
+            ;
+
+        this.router.post(
+            `${this.path}/edit`,
+            authenticated,
+            this.editPerson
+        );
 
     }
 
@@ -87,22 +103,55 @@ class PersonController implements Controller {
 
         try {
 
-            const users = await this.PersonService.getPersons();
+            const persons = await this.PersonService.getPersons();
 
-            res.status(200).json({ message: 'elko' });
+            if (Array.isArray(persons) && persons.length > 0) {
 
-            // if (Array.isArray(users) && users.length > 0){
+                // Status is ok 200 as nothing has been created
+                res.status(200).json({ persons });
 
-            //     // Status is ok 200 as nothing has been created
-            //     res.status(200).json({ users });
+            }
+            else if (Array.isArray(persons) && persons.length === 0) {
 
-            // }
-            // else if (Array.isArray(users) && users.length === 0){
+                // Status 204 - No content
+                res.status(204).json()
 
-            //     // Status 204 - No content
-            //     res.status(204).json()
+            }
 
-            // }
+        }
+        catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+
+    };
+
+    private editPerson = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+
+        try {
+
+            const { id } = req.body;
+            const personToEdit = await this.PersonService.getById(id);
+
+            if (!personToEdit || personToEdit instanceof Error) {
+
+                // Status 204 - No content
+                res.status(204).json('id does not specify a valid person');
+
+
+            }
+            else {
+
+                personToEdit.set({
+                    username: req.body.username ?? personToEdit.getDataValue('username'),
+                    email: req.body.email ?? personToEdit.getDataValue('email'),
+                    kind: req.body.kind ?? personToEdit.getDataValue('kind')
+                });
+                personToEdit.save();
+
+                // Status is ok 200 as nothing has been created
+                res.status(200).json({ personToEdit });
+
+            }
 
         }
         catch (error: any) {
@@ -125,7 +174,7 @@ class PersonController implements Controller {
     //             const responseStatus = 204;
     //             res.status(responseStatus).json({ status: responseStatus, message: status[responseStatus]});
     //         }
-                
+
 
     //     }
     //     catch (error: any) { 
