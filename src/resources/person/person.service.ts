@@ -64,7 +64,7 @@ class PersonService {
 
     };
 
-    public async getByEmail(email: string): Promise<Error | Person> {
+    public async getByEmail(email: string): Promise<Error | PersonModel> {
 
         try {
             const existingPerson = await this.personModel.findOne({ where: {  email } });
@@ -99,6 +99,12 @@ class PersonService {
         catch (error) {
             throw new Error('Error during fetching by id: ' + error);
         }
+
+    }
+
+    public async insertInitialPersonData(): Promise<void> {
+
+        
 
     }
 

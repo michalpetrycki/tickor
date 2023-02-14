@@ -1,0 +1,1 @@
+/tmp/sql/import-salt.sh & /opt/mssql/bin/sqlservr

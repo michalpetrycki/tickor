@@ -36,7 +36,7 @@ class App {
 
     }
 
-    private initializeMiddleware(): void{
+    private initializeMiddleware(): void {
 
         // set security HTTP headers
         this.express.use(helmet());
@@ -70,10 +70,10 @@ class App {
 
         // // v1 api routes
         // this.express.use('/v1', routes);
-        
+
     }
 
-    private initializeControllers(controllers: Controller[]): void{
+    private initializeControllers(controllers: Controller[]): void {
 
         controllers.forEach((controller: Controller) => {
             this.express.use('/api', controller.router);
@@ -81,7 +81,7 @@ class App {
 
     }
 
-    private initializeErrorHandling(): void{
+    private initializeErrorHandling(): void {
 
         this.express.use(ErrorMiddleware);
 
@@ -145,7 +145,7 @@ class App {
 
     }
 
-    public listen(): void{
+    public listen(): void {
 
         this.express.listen(this.port, () => {
             console.log(`App listening on port ${this.port}`);

@@ -1,10 +1,42 @@
 {
     "dbName": "Tickor",
+    "passwordHashDbName": "TickorHash",
+    "passwordSaltDbName": "TickorSalt",
     "dbConfig": {
         "__server": "127.0.0.1",
         "server": "localhost",
         "options": {
             "port": 1433,
+            "trustServerCertificate": true
+        },
+        "authentication": {
+            "type": "default",
+            "options": {
+                "username": "sa",
+                "password": "costam@711"
+            }
+        }
+    },
+    "passwordHashDbConfig": {
+        "__server": "127.0.0.1",
+        "server": "localhost",
+        "options": {
+            "port": 1444,
+            "trustServerCertificate": true
+        },
+        "authentication": {
+            "type": "default",
+            "options": {
+                "username": "sa",
+                "password": "costam@711"
+            }
+        }
+    },
+    "passwordSaltDbConfig": {
+        "__server": "127.0.0.1",
+        "server": "localhost",
+        "options": {
+            "port": 1455,
             "trustServerCertificate": true
         },
         "authentication": {

@@ -1,0 +1,1 @@
+/tmp/sql/import-hash.sh & /opt/mssql/bin/sqlservr
