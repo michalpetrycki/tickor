@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { passwordSaltDbName, passwordSaltDbConfig } from './config/config.json';
+import { passwordSaltDbName, passwordSaltDbConfig } from '../config/config.json';
 
 const dialect = 'mssql';
 const host = passwordSaltDbConfig.server;

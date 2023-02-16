@@ -8,24 +8,24 @@ class PasswordHashModel extends Model { }
 PasswordHashModel.init({
     id: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
+        // autoIncrement: true,
         primaryKey: true
     },
     username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(40),
         unique: true,
         allowNull: false,
         validate: {
             notNull: { msg: 'username is required' },
-            max: { args: [40], msg: 'username exceeds maximum (40) length '}
+            len: { args: [0, 40], msg: 'username exceeds maximum (40) length' }
         }
     },
     password_hash: {
-        type: DataTypes.STRING(40),
+        type: DataTypes.STRING(60),
         allowNull: false,
         validate: {
             notNull: { msg: 'password hash is required' },
-            max: { args: [40], msg: 'password hash exceeds maximum (40) length' }
+            len: { args: [0, 60], msg: 'password hash exceeds maximum (40) length' }
         }
     }
 }, {

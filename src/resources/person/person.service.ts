@@ -3,6 +3,10 @@ import Person from '@/resources/person/person.model';
 import PersonModel from '@/resources/person/person.model';
 import bcrypt from 'bcrypt';
 import { default as env } from '@/utils/config/config';
+import PasswordHashController from '@/resources/password-hash/password-hash.controller';
+import PasswordSaltController from '@/resources/password-salt/password-salt.controller';
+import TickorApp from 'apps/TickorApp';
+import fetch from 'cross-fetch';
 
 class PersonService {
     
@@ -108,22 +112,35 @@ class PersonService {
 
     }
 
-    public async updateAdminPassword(): Promise<void> {
+    public async setAdminAccount(tickorApp: TickorApp): Promise<void> {
 
         const adminAccount = await this.getByEmail(env.adminEmail);
 
         if (adminAccount instanceof PersonModel) {
 
-            if (adminAccount.getDataValue('password') === '') {
+            // if (adminAccount.getDataValue('password') === '') {
                 const salt = bcrypt.genSaltSync();
                 const hash = bcrypt.hashSync(env.adminPassword, salt);
+
+                console.log('=======================' + hash);
+
+                const response = await fetch('http://localhost:3033/api/password-hash/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ id: 2, username: 'admin', password_hash: hash }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response) {
+                    console.log(await response.text());
+                }
+
                 adminAccount.setDataValue('password', hash);
                 adminAccount.save();
                 console.log('Admin password updated');
-            }
-            else {
-                console.log('Admin password already set')
-            }
+            // }
+            // else {
+            //     console.log('Admin password already set')
+            // }
 
         }
         else {

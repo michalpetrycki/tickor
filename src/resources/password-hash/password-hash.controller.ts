@@ -20,25 +20,25 @@ class PasswordHashController implements Controller {
 
         this.router.post(
             `${this.path}/register`,
-            hasRoleMiddleware(['administrator']),
+            // hasRoleMiddleware(['administrator']),
             this.register
         );
 
         this.router.post(
             `${this.path}/username`,
-            hasRoleMiddleware(['administrator']),
+            // hasRoleMiddleware(['administrator']),
             this.fetch
         );
 
         this.router.post(
             `${this.path}/edit`,
-            hasRoleMiddleware(['administrator']),
+            // hasRoleMiddleware(['administrator']),
             this.edit
         );
 
         this.router.post(
             `${this.path}/delete`,
-            hasRoleMiddleware(['administrator']),
+            // hasRoleMiddleware(['administrator']),
             this.delete
         );
 
@@ -48,9 +48,8 @@ class PasswordHashController implements Controller {
 
         try {
 
-            const { username, email } = req.body;
-
-            const token = await this.PasswordHashService.registerPasswordHashForUsername(username, email);
+            const { id, username, password_hash } = req.body;
+            const token = await this.PasswordHashService.registerPasswordHashForUsername(id, username, password_hash);
 
             // 201 if something is created
             res.status(201).json({ token });

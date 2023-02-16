@@ -1,19 +1,17 @@
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 
-class HealthCheckController implements Controller{
+class HealthCheckController implements Controller {
 
     public path = '/health';
     public router = Router();
 
-    constructor(){
+    constructor() {
         this.initializeRoutes();
     }
 
-    private initializeRoutes(): void{
-
+    private initializeRoutes(): void {
         this.router.get(`${this.path}`, this.getHealthCheckData);
-
     }
 
     private getHealthCheckData = (req: Request, res: Response, next: NextFunction): Response | void => {

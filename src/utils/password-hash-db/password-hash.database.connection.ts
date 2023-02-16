@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { passwordHashDbName, passwordHashDbConfig } from './config/config.json';
+import { passwordHashDbName, passwordHashDbConfig } from '../config/config.json';
 
 const dialect = 'mssql';
 const host = passwordHashDbConfig.server;

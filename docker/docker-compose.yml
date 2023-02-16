@@ -13,30 +13,30 @@ services:
       - ./data/db:/usr/app/data
       - ./../sql:/tmp/sql
     command: /bin/bash /tmp/sql/entrypoint.sh
-  # password-hash-server:
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   container_name: password-hash-server
-  #   ports:
-  #     - "1444:1433"
-  #   environment:
-  #     SA_PASSWORD: "costam@711"
-  #     ACCEPT_EULA: "Y"
-  #   volumes:
-  #     - ./data/password-hash/db:/usr/app/data
-  #     - ./../sql:/tmp/sql
-  #   command: /bin/bash /tmp/sql/password-hash-entrypoint.sh
-  # password-salt-server:
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   container_name: password-salt-server
-  #   ports:
-  #     - "1455:1433"
-  #   environment:
-  #     SA_PASSWORD: "costam@711"
-  #     ACCEPT_EULA: "Y"
-  #   volumes:
-  #     - ./data/password-salt/db:/usr/app/data
-  #     - ./../sql:/tmp/sql
-  #   command: /bin/bash /tmp/sql/password-salt-entrypoint.sh
+  password-hash-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: password-hash-server
+    ports:
+      - "1444:1433"
+    environment:
+      SA_PASSWORD: "costam@711"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./data/password-hash/db:/usr/app/data
+      - ./../sql:/tmp/sql
+    command: /bin/bash /tmp/sql/password-hash-entrypoint.sh
+  password-salt-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: password-salt-server
+    ports:
+      - "1455:1433"
+    environment:
+      SA_PASSWORD: "costam@711"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./data/password-salt/db:/usr/app/data
+      - ./../sql:/tmp/sql
+    command: /bin/bash /tmp/sql/password-salt-entrypoint.sh
   # web-app:
   #   build: 
   #     context: ../

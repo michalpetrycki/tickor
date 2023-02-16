@@ -4,11 +4,11 @@ class PasswordHashService {
     
     private passwordHashModel = PasswordHashModel;
 
-    public async registerPasswordHashForUsername(username: string, passwordHash: string): Promise<Error | PasswordHashModel>{
+    public async registerPasswordHashForUsername(id: number, username: string, password_hash: string): Promise<Error | PasswordHashModel>{
         
         try {
 
-            const person = await this.passwordHashModel.create({ username, passwordHash });
+            const person = await this.passwordHashModel.create({ id, username, password_hash });
             return person;
 
         } 

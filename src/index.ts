@@ -1,14 +1,21 @@
 // import dotenv from 'dotenv';
 import 'module-alias/register';
-import App from './app';
+import TickorApp from './apps/TickorApp';
+import PasswordHashApp from './apps/PasswordHashApp';
+import PasswordSaltApp from './apps/PasswordSaltApp';
 import PersonController from '@/resources/person/person.controller';
 import HealthCheckController from '@/resources/health-check/health-check.controller';
+import PasswordHashController from '@/resources/password-hash/password-hash.controller';
+import PasswordSaltController from '@/resources/password-salt/password-salt.controller';
 
 // validateEnv();
 
 // dotenv.config();
 
-// const app = new App([new UserController(), new HealthCheckController()], Number(process.env.PORT));
-const app = new App([ new HealthCheckController(), new PersonController()], 3000);
+const tickorApp = new TickorApp([new HealthCheckController(), new PersonController()], 3000);
+const passwordHashApp = new PasswordHashApp([new HealthCheckController(), new PasswordHashController()], 3033);
+const passwordSaltApp = new PasswordSaltApp([new HealthCheckController(), new PasswordSaltController()], 3044);
 
-app.listen();
+tickorApp.listen();
+passwordHashApp.listen();
+passwordSaltApp.listen();
