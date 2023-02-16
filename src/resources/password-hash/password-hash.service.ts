@@ -21,6 +21,7 @@ class PasswordHashService {
     public async getPasswordHashForUsername(username: string): Promise<Error | PasswordHashModel> {
 
         try {
+
             const passwordHash = await this.passwordHashModel.findOne({ where: { username }});
 
             if (!passwordHash){
@@ -28,6 +29,53 @@ class PasswordHashService {
             }
             else {
                 return passwordHash;
+            }
+
+        }
+        catch (error) {
+            throw new Error('no password hash found for given username');
+        }
+
+    }
+
+    public async editPasswordHashForUsername(username: string, passwordHash: string): Promise<Error | PasswordHashModel> {
+
+        try {
+
+            const passwordHash = await this.passwordHashModel.findOne({ where: { username }});
+
+            if (!passwordHash){
+                throw new Error('Unable to find password hash for given username');
+            }
+            else {
+
+                passwordHash.setDataValue('password_hash', passwordHash);
+                passwordHash.save();
+                return passwordHash;
+
+            }
+
+        }
+        catch (error) {
+            throw new Error('no password hash found for given username');
+        }
+
+    }
+
+    public async deleteUsernameAndPassowrdHash(username: string): Promise<Error | boolean> {
+
+        try {
+
+            const passwordHash = await this.passwordHashModel.findOne({ where: { username }});
+            
+            if (!passwordHash){
+                throw new Error('Unable to find password hash for given username');
+            }
+            else {
+
+                passwordHash?.destroy();
+                return true;
+                
             }
 
         }

@@ -1,16 +1,16 @@
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 import HttpException from '@/utils/exceptions/http.exception';
-import PasswordHashService from '@/resources/password-hash/password-hash.service';
+import PasswordSaltService from '@/resources/password-salt/password-salt.service';
 import hasRoleMiddleware from '@/middleware/role.middleware';
 import status from 'http-status';
-import PasswordHashModel from '@/resources/password-hash/password-hash.model';
+import PasswordSaltModel from '@/resources/password-salt/password-salt.model';
 
-class PasswordHashController implements Controller {
+class PasswordSaltController implements Controller {
 
-    public path = '/password-hash';
+    public path = '/password-salt';
     public router = Router();
-    private PasswordHashService = new PasswordHashService();
+    private PasswordSaltService = new PasswordSaltService();
 
     constructor() {
         this.initializeRoutes();
@@ -48,9 +48,9 @@ class PasswordHashController implements Controller {
 
         try {
 
-            const { username, email } = req.body;
+            const { username, salt } = req.body;
 
-            const token = await this.PasswordHashService.registerPasswordHashForUsername(username, email);
+            const token = await this.PasswordSaltService.registerPasswordSaltForUsername(username, salt);
 
             // 201 if something is created
             res.status(201).json({ token });
@@ -68,10 +68,10 @@ class PasswordHashController implements Controller {
 
             const { email } = req.body;
 
-            const token = await this.PasswordHashService.getPasswordHashForUsername(email);
+            const salt = await this.PasswordSaltService.getPasswordSaltForUsername(email);
 
             // Status is ok 200 as nothing has been created
-            res.status(200).json({ token });
+            res.status(200).json({ salt });
 
         }
         catch (error: any) {
@@ -84,11 +84,11 @@ class PasswordHashController implements Controller {
 
         try {
 
-            const { username, hash } = req.body;
+            const { username, salt } = req.body;
 
-            const passwordHash = await this.PasswordHashService.editPasswordHashForUsername(username, hash);
+            const passwordSalt = await this.PasswordSaltService.editPasswordSaltForUsername(username, salt);
 
-            if (passwordHash instanceof PasswordHashModel) {
+            if (passwordSalt instanceof PasswordSaltModel) {
 
                 // Status is ok 200 as nothing has been created
                 res.status(200).json({ message: status[200] });
@@ -111,9 +111,9 @@ class PasswordHashController implements Controller {
 
             const { username } = req.body;
 
-            const passwordHash = await this.PasswordHashService.deleteUsernameAndPassowrdHash(username);
+            const passwordSalt = await this.PasswordSaltService.deleteUsernameAndPassowrdSalt(username);
 
-            if (passwordHash) {
+            if (passwordSalt) {
 
                 // Status is ok 200 as nothing has been created
                 res.status(204).json({ message: status[204] });
@@ -133,4 +133,4 @@ class PasswordHashController implements Controller {
 
 }
 
-export default PasswordHashController;
+export default PasswordSaltController;

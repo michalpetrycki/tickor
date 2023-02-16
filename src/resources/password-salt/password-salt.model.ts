@@ -1,31 +1,31 @@
 import { Model, DataTypes } from 'sequelize';
-import connection from '@/utils/password-hash-db/password-hash.database.connection';
+import connection from '@/utils/password-salt-db/password-salt.database.connection';
 
 const sequelize = connection;
 
-class PasswordHashModel extends Model { }
+class PasswordSaltModel extends Model { }
 
-PasswordHashModel.init({
+PasswordSaltModel.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
     username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(40),
         unique: true,
         allowNull: false,
         validate: {
             notNull: { msg: 'username is required' },
-            max: { args: [40], msg: 'username exceeds maximum (40) length '}
+            max: { args: [40], msg: 'username exceeds maximum (40) length' }
         }
     },
-    password_hash: {
-        type: DataTypes.STRING(40),
+    salt: {
+        type: DataTypes.STRING(32),
         allowNull: false,
         validate: {
-            notNull: { msg: 'password hash is required' },
-            max: { args: [40], msg: 'password hash exceeds maximum (40) length' }
+            notNull: { msg: 'password salt is required' },
+            max: { args: [32], msg: 'password salt exceeds maximum (32) length' }
         }
     }
 }, {
@@ -35,4 +35,4 @@ PasswordHashModel.init({
     timestamps: false
 });
 
-export default PasswordHashModel;
+export default PasswordSaltModel;

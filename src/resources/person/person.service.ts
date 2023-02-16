@@ -62,7 +62,7 @@ class PersonService {
             throw new Error('Unable to get persons');
         }
 
-    };
+    }
 
     public async getByEmail(email: string): Promise<Error | PersonModel> {
 
