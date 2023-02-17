@@ -80,7 +80,7 @@ class TickorApp {
     public async setAdminAccount(): Promise<void> {
 
         const personService = new PersonService();
-        personService.setAdminAccount(this);
+        personService.setAdminAccount();
 
     }
 

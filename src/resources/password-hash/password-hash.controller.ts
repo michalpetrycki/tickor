@@ -49,10 +49,10 @@ class PasswordHashController implements Controller {
         try {
 
             const { id, username, password_hash } = req.body;
-            const token = await this.PasswordHashService.registerPasswordHashForUsername(id, username, password_hash);
+            const user_hash = await this.PasswordHashService.registerPasswordHashForUsername(id, username, password_hash);
 
             // 201 if something is created
-            res.status(201).json({ token });
+            res.status(201).json({ user_hash });
 
         }
         catch (error: any) {
@@ -65,12 +65,12 @@ class PasswordHashController implements Controller {
 
         try {
 
-            const { email } = req.body;
+            const { username } = req.body;
 
-            const token = await this.PasswordHashService.getPasswordHashForUsername(email);
+            const user_hash = await this.PasswordHashService.getPasswordHashForUsername(username);
 
             // Status is ok 200 as nothing has been created
-            res.status(200).json({ token });
+            res.status(200).json({ user_hash });
 
         }
         catch (error: any) {

@@ -20,25 +20,21 @@ class PasswordSaltController implements Controller {
 
         this.router.post(
             `${this.path}/register`,
-            hasRoleMiddleware(['administrator']),
             this.register
         );
 
         this.router.post(
             `${this.path}/username`,
-            hasRoleMiddleware(['administrator']),
             this.fetch
         );
 
         this.router.post(
             `${this.path}/edit`,
-            hasRoleMiddleware(['administrator']),
             this.edit
         );
 
         this.router.post(
             `${this.path}/delete`,
-            hasRoleMiddleware(['administrator']),
             this.delete
         );
 
@@ -48,12 +44,12 @@ class PasswordSaltController implements Controller {
 
         try {
 
-            const { username, salt } = req.body;
+            const { id, username, password_salt } = req.body;
 
-            const token = await this.PasswordSaltService.registerPasswordSaltForUsername(username, salt);
+            const user_salt = await this.PasswordSaltService.registerPasswordSaltForUsername(id, username, password_salt);
 
             // 201 if something is created
-            res.status(201).json({ token });
+            res.status(201).json({ user_salt });
 
         }
         catch (error: any) {
@@ -66,9 +62,9 @@ class PasswordSaltController implements Controller {
 
         try {
 
-            const { email } = req.body;
+            const { username } = req.body;
 
-            const salt = await this.PasswordSaltService.getPasswordSaltForUsername(email);
+            const salt = await this.PasswordSaltService.getPasswordSaltForUsername(username);
 
             // Status is ok 200 as nothing has been created
             res.status(200).json({ salt });

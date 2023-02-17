@@ -4,12 +4,12 @@ class PasswordSaltService {
     
     private passwordSaltModel = PasswordSaltModel;
 
-    public async registerPasswordSaltForUsername(username: string, passwordSalt: string): Promise<Error | PasswordSaltModel>{
+    public async registerPasswordSaltForUsername(id: number, username: string, password_salt: string): Promise<Error | PasswordSaltModel>{
         
         try {
 
-            const person = await this.passwordSaltModel.create({ username, passwordSalt });
-            return person;
+            const user_salt = await this.passwordSaltModel.create({ id, username, password_salt });
+            return user_salt;
 
         } 
         catch (error: any) {
@@ -22,13 +22,13 @@ class PasswordSaltService {
 
         try {
 
-            const passwordSalt = await this.passwordSaltModel.findOne({ where: { username }});
+            const user_salt = await this.passwordSaltModel.findOne({ where: { username }});
 
-            if (!passwordSalt){
+            if (!user_salt){
                 throw new Error('Unable to find password salt for given username');
             }
             else {
-                return passwordSalt;
+                return user_salt;
             }
 
         }

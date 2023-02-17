@@ -51,29 +51,24 @@ PersonModel.init({
         validate: {
             isIn: [[ 'administrator', 'robot', 'joe' ]]
         }
-    },
-    password: {
-        type: DataTypes.STRING(64),
-        field: 'password_hash',
-        allowNull: false
     }
 }, {
     sequelize,
     freezeTableName: true,
     modelName: 'Person',
     timestamps: false,
-    hooks: {
-        beforeCreate: async (person, options) => {
-            try {
-                const salt = bcrypt.genSaltSync();
-                const hash = bcrypt.hashSync(person.getDataValue('password'), salt);
-                person.setDataValue('password', hash);
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
-    }
+    // hooks: {
+    //     beforeCreate: async (person, options) => {
+    //         try {
+    //             const salt = bcrypt.genSaltSync();
+    //             const hash = bcrypt.hashSync(person.getDataValue('password'), salt);
+    //             person.setDataValue('password', hash);
+    //         }
+    //         catch (error) {
+    //             console.log(error);
+    //         }
+    //     }
+    // }
 });
 
 export default PersonModel;

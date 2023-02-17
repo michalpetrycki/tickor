@@ -8,24 +8,25 @@ class PasswordSaltModel extends Model { }
 PasswordSaltModel.init({
     id: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+        // autoIncrement: true,
+        primaryKey: true,
+        unique: true
     },
     username: {
         type: DataTypes.STRING(40),
-        unique: true,
         allowNull: false,
+        unique: true,
         validate: {
             notNull: { msg: 'username is required' },
-            max: { args: [40], msg: 'username exceeds maximum (40) length' }
+            len: { args: [0, 40], msg: 'username exceeds maximum (40) length' }
         }
     },
-    salt: {
+    password_salt: {
         type: DataTypes.STRING(32),
         allowNull: false,
         validate: {
-            notNull: { msg: 'password salt is required' },
-            max: { args: [32], msg: 'password salt exceeds maximum (32) length' }
+            notNull: { msg: 'password_salt is required' },
+            len: { args: [0, 32], msg: 'password_salt exceeds maximum (32) length' }
         }
     }
 }, {

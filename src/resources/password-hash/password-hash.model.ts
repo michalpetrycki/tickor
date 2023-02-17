@@ -9,12 +9,13 @@ PasswordHashModel.init({
     id: {
         type: DataTypes.INTEGER,
         // autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
+        unique: true
     },
     username: {
         type: DataTypes.STRING(40),
-        unique: true,
         allowNull: false,
+        unique: true,
         validate: {
             notNull: { msg: 'username is required' },
             len: { args: [0, 40], msg: 'username exceeds maximum (40) length' }
@@ -24,14 +25,14 @@ PasswordHashModel.init({
         type: DataTypes.STRING(60),
         allowNull: false,
         validate: {
-            notNull: { msg: 'password hash is required' },
-            len: { args: [0, 60], msg: 'password hash exceeds maximum (40) length' }
+            notNull: { msg: 'password_hash is required' },
+            len: { args: [0, 60], msg: 'password_hash exceeds maximum (60) length' }
         }
     }
 }, {
     sequelize,
     freezeTableName: true,
-    modelName: 'UserPasswordSalt',
+    modelName: 'UserPasswordHash',
     timestamps: false
 });
 

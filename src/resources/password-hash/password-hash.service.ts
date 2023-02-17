@@ -22,13 +22,13 @@ class PasswordHashService {
 
         try {
 
-            const passwordHash = await this.passwordHashModel.findOne({ where: { username }});
+            const user_hash = await this.passwordHashModel.findOne({ where: { username }});
 
-            if (!passwordHash){
+            if (!user_hash){
                 throw new Error('Unable to find password hash for given username');
             }
             else {
-                return passwordHash;
+                return user_hash;
             }
 
         }
