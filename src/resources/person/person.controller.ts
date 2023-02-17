@@ -75,9 +75,11 @@ class PersonController implements Controller {
 
         try {
 
-            const { email, password } = req.body;
+            // const { email, password } = req.body;
+            // const token = await this.PersonService.loginWithEmail(email, password);
 
-            const token = await this.PersonService.login(email, password);
+            const { username, password } = req.body;
+            const token = await this.PersonService.loginWithUsername(username, password);
 
             // Status is ok 200 as nothing has been created
             res.status(200).json({ token });

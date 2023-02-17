@@ -24,13 +24,7 @@ async function authenticatedMiddleware(req: Request, res: Response, next: NextFu
         }
 
         const p = await Person.findByPk(payload.id + '');
-        const pp = p?.getDataValue('-password');
-
-
-        // const user = await UserModel.findById(payload.id)
-        //                             .select('-password')
-        //                             .exec();
-
+        
         if (!p) {
             return next(new HttpException(401, 'Unauthorized'));
         }

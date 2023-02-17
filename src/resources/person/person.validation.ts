@@ -22,10 +22,21 @@ const register = Joi.object({
 
 });
 
+// const login = Joi.object({
+//     email: Joi.string().email().required().messages({
+//         'any.required': 'email is required',
+//         'string.email': 'not a valid email address'
+//     }),
+//     password: Joi.string().required().messages({
+//         'any.required': 'password is required',
+//         'string.base': 'password should be a string'
+//     })
+// });
+
 const login = Joi.object({
-    email: Joi.string().email().required().messages({
-        'any.required': 'email is required',
-        'string.email': 'not a valid email address'
+    username: Joi.string().required().messages({
+        'any.required': 'username is required',
+        'string.base': 'username should be a string'
     }),
     password: Joi.string().required().messages({
         'any.required': 'password is required',

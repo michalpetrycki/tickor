@@ -35,13 +35,38 @@ class PersonService {
     /**
      * Attempt to login a person
      */
-    public async login(email: string, password: string): Promise<Error | string> {
+    public async loginWithEmail(email: string, password: string): Promise<Error | string> {
         try {
 
             const existingPerson = await this.personModel.findOne({ where: { email } });
 
             if (!existingPerson) {
                 throw new Error('Unable to find person with that email address');
+            }
+
+            if (await existingPerson.isPasswordValid(password)) {
+                return token.createToken(existingPerson);
+            }
+            else {
+                throw new Error('Wrong credentials given');
+            }
+
+        }
+        catch (error) {
+            throw new Error('Unable to login person. ' + error);
+        }
+    }
+
+    /**
+     * Attempt to login a person
+     */
+    public async loginWithUsername(username: string, password: string): Promise<Error | string> {
+        try {
+
+            const existingPerson = await this.personModel.findOne({ where: { username } });
+
+            if (!existingPerson) {
+                throw new Error('Unable to find person with that username');
             }
 
             if (await existingPerson.isPasswordValid(password)) {
