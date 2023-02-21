@@ -10,6 +10,7 @@ class PersonModel extends Model {
 
         try {
             return bcrypt.compare(password, this.getDataValue('password'));
+            bcrypt.compareSync
         }
         catch (error) {
             console.log(error);

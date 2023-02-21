@@ -63,5 +63,6 @@ export default {
   //   from: envVars.EMAIL_FROM,
   // },
   adminEmail: envVars.ADMIN_EMAIL,
-  adminPassword: envVars.ADMIN_PASSWORD
+  adminPassword: envVars.ADMIN_PASSWORD,
+  adminLogin: envVars.ADMIN_LOGIN
 }

@@ -63,11 +63,26 @@ class PersonService {
     public async loginWithUsername(username: string, password: string): Promise<Error | string> {
         try {
 
+            console.log(username);
+            console.log(password);
+
             const existingPerson = await this.personModel.findOne({ where: { username } });
 
             if (!existingPerson) {
                 throw new Error('Unable to find person with that username');
             }
+
+            Promise.all([this.fetchUserPasswordHash(username), this.fetchUserPasswordSalt(username)])
+                .then((promises) => {
+
+                    console.log(promises[0]);
+                    console.log(promises[1]);
+
+                    // if (await existingPerson.isPasswordValid())
+
+
+                });
+
 
             if (await existingPerson.isPasswordValid(password)) {
                 return token.createToken(existingPerson);
@@ -150,7 +165,7 @@ class PersonService {
 
                 const admin_salt_response = await fetch('http://localhost:3044/api/password-salt/username', {
                     method: 'POST',
-                    body: JSON.stringify({ username: 'admin' }),
+                    body: JSON.stringify({ username: 'administrator' }),
                     headers: { 'Content-Type': 'application/json' }
                 });
 
@@ -167,7 +182,7 @@ class PersonService {
 
                         const salt_response = await fetch('http://localhost:3044/api/password-salt/register', {
                             method: 'POST',
-                            body: JSON.stringify({ id: 1, username: 'admin', password_salt: salt }),
+                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_salt: salt }),
                             headers: { 'Content-Type': 'application/json' }
                         });
 
@@ -214,7 +229,7 @@ class PersonService {
 
                         const hash_response = await fetch('http://localhost:3033/api/password-hash/register', {
                             method: 'POST',
-                            body: JSON.stringify({ id: 1, username: 'admin', password_hash: hash }),
+                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_hash: hash }),
                             headers: { 'Content-Type': 'application/json' }
                         });
 
@@ -243,6 +258,40 @@ class PersonService {
         }
         else {
             console.error('ERROR - Admin account not found');
+        }
+
+    }
+
+    private async fetchUserPasswordSalt(username: string): Promise<Error | string> {
+
+        const admin_salt_response = await fetch('http://localhost:3044/api/password-salt/username', {
+            method: 'POST',
+            body: JSON.stringify({ username }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (admin_salt_response.status === 200) {
+            return await admin_salt_response.text();
+        }
+        else {
+            return new Error('ERROR - Error while fetching user password salt => ' + await admin_salt_response.text());
+        }
+
+    }
+
+    private async fetchUserPasswordHash(username: string): Promise<Error | string> {
+
+        const admin_hash_response = await fetch('http://localhost:3044/api/password-hash/username', {
+            method: 'POST',
+            body: JSON.stringify({ username }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (admin_hash_response.status === 200) {
+            return await admin_hash_response.text();
+        }
+        else {
+            return new Error('ERROR - Error while fetching user password hash => ' + await admin_hash_response.text());
         }
 
     }
