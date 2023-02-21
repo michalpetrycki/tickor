@@ -9,7 +9,6 @@ import jwtStrategy from '../utils/config/passport';
 import Controller from '@/utils/interfaces/Controller.interface';
 import ErrorMiddleware from '@/middleware/error.middleware';
 import PersonService from '@/resources/person/person.service';
-import bcrypt from 'bcrypt';
 
 class TickorApp {
 

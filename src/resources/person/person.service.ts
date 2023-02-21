@@ -1,12 +1,11 @@
 import token from '@/utils/token';
 import Person from '@/resources/person/person.model';
 import PersonModel from '@/resources/person/person.model';
-import bcrypt from 'bcrypt';
 import { default as env } from '@/utils/config/config';
-import PasswordHashController from '@/resources/password-hash/password-hash.controller';
-import PasswordSaltController from '@/resources/password-salt/password-salt.controller';
-import TickorApp from 'apps/TickorApp';
 import fetch from 'cross-fetch';
+import * as argon2 from 'argon2';
+import PasswordHash from '@/resources/password-hash/password-hash.interface';
+import PasswordSalt from '@/resources/password-salt/password-salt.interface';
 
 class PersonService {
 
@@ -44,7 +43,7 @@ class PersonService {
                 throw new Error('Unable to find person with that email address');
             }
 
-            if (await existingPerson.isPasswordValid(password)) {
+            if (await existingPerson.isPasswordValid(password, '$abcd')) {
                 return token.createToken(existingPerson);
             }
             else {
@@ -61,10 +60,8 @@ class PersonService {
      * Attempt to login a person
      */
     public async loginWithUsername(username: string, password: string): Promise<Error | string> {
-        try {
 
-            console.log(username);
-            console.log(password);
+        try {
 
             const existingPerson = await this.personModel.findOne({ where: { username } });
 
@@ -72,29 +69,32 @@ class PersonService {
                 throw new Error('Unable to find person with that username');
             }
 
-            Promise.all([this.fetchUserPasswordHash(username), this.fetchUserPasswordSalt(username)])
-                .then((promises) => {
+            const passHashStr = await this.fetchUserPasswordHash(username);
+            const passSaltStr = await this.fetchUserPasswordSalt(username);
 
-                    console.log(promises[0]);
-                    console.log(promises[1]);
+            if (passHashStr instanceof Error) {
+                throw new Error('ERROR - Password hash or salt ');
+            }
+            if (passSaltStr instanceof Error) {
+                throw new Error('ERROR - Password hash or salt ');
+            }
 
-                    // if (await existingPerson.isPasswordValid())
+            const passHash = (<PasswordHash>JSON.parse(passHashStr)).user_hash.password_hash;
+            const passSalt = (<PasswordSalt>JSON.parse(passSaltStr)).user_salt.password_salt;
+            const restoredHash = passHash.replace('insertsalthere', passSalt);
 
-
-                });
-
-
-            if (await existingPerson.isPasswordValid(password)) {
+            if (await existingPerson.isPasswordValid(password, restoredHash)) {
                 return token.createToken(existingPerson);
             }
             else {
-                throw new Error('Wrong credentials given');
+                throw new Error('ERROR - Wrong credentials given');
             }
 
         }
         catch (error) {
             throw new Error('Unable to login person. ' + error);
         }
+
     }
 
     public async getPersons(): Promise<Error | Person[]> {
@@ -154,82 +154,48 @@ class PersonService {
 
     public async setAdminAccount(): Promise<void> {
 
+        // following official documentation https://github.com/ranisalt/node-argon2/wiki/Options#salt
+        // it's not recommended to generate own salt. Salt is part of the hash itself.
+
         const adminAccount = await this.getByEmail(env.adminEmail);
 
         if (adminAccount instanceof PersonModel) {
 
-            let salt = '';
-            let hash = '';
+            let passSalt, passHash, hashWithoutSalt = '';
 
             try {
 
-                const admin_salt_response = await fetch('http://localhost:3044/api/password-salt/username', {
-                    method: 'POST',
-                    body: JSON.stringify({ username: 'administrator' }),
-                    headers: { 'Content-Type': 'application/json' }
+                const generatedHash = await argon2.hash(env.adminPassword, {
+                    type: argon2.argon2id, // recommended here https://crypto.stackexchange.com/a/72437 
                 });
 
-                if (admin_salt_response.status === 400 && (await admin_salt_response.text()).indexOf('no password salt found') > -1) {
+                const generatedHashBits = generatedHash.split('$');
+                passSalt = generatedHashBits[4];
+                passHash = generatedHashBits[5];
 
-                    try {
-                        salt = bcrypt.genSaltSync(7);
-                    }
-                    catch (error) {
-                        console.error('ERROR - Error during generating password salt => ' + error);
-                    }
-
-                    try {
-
-                        const salt_response = await fetch('http://localhost:3044/api/password-salt/register', {
-                            method: 'POST',
-                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_salt: salt }),
-                            headers: { 'Content-Type': 'application/json' }
-                        });
-
-                        if (salt_response.status === 201) {
-                            console.info('SUCCESS - Admin password salt successfully registered');
-                        }
-                        else {
-                            throw new Error('REASON - ' + await salt_response.text());
-                        }
-
-                    }
-                    catch (error) {
-                        console.log('ERROR - Error during registration of admin password salt => ' + error);
-                    }
-
-                }
-                else {
-                    console.log('INFO - admin password salt already set');
-                }
+                generatedHashBits[4] = 'insertsalthere';
+                hashWithoutSalt = generatedHashBits.join('$');
 
             }
             catch (error) {
-                console.log('ERROR - Error during fetching admin password salt => ' + error);
+                console.log('ERROR - Error during generating hash => ' + error);
             }
 
             try {
 
                 const admin_hash_response = await fetch('http://localhost:3033/api/password-hash/username', {
                     method: 'POST',
-                    body: JSON.stringify({ username: 'admin' }),
+                    body: JSON.stringify({ username: env.adminLogin }),
                     headers: { 'Content-Type': 'application/json' }
                 });
 
                 if (admin_hash_response.status === 400 && (await admin_hash_response.text()).indexOf('no password hash found') > -1) {
 
                     try {
-                        hash = bcrypt.hashSync(env.adminPassword, salt);
-                    }
-                    catch (error) {
-                        console.error('ERROR - Error during generating password hash => ' + error);
-                    }
-
-                    try {
 
                         const hash_response = await fetch('http://localhost:3033/api/password-hash/register', {
                             method: 'POST',
-                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_hash: hash }),
+                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_hash: hashWithoutSalt }),
                             headers: { 'Content-Type': 'application/json' }
                         });
 
@@ -253,6 +219,46 @@ class PersonService {
             }
             catch (error) {
                 console.log('ERROR - Error during fetching admin password hash => ' + error);
+            }
+
+            try {
+
+                const admin_salt_response = await fetch('http://localhost:3044/api/password-salt/username', {
+                    method: 'POST',
+                    body: JSON.stringify({ username: 'administrator' }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (admin_salt_response.status === 400 && (await admin_salt_response.text()).indexOf('no password salt found') > -1) {
+
+                    try {
+
+                        const salt_response = await fetch('http://localhost:3044/api/password-salt/register', {
+                            method: 'POST',
+                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_salt: passSalt }),
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+
+                        if (salt_response.status === 201) {
+                            console.info('SUCCESS - Admin password salt successfully registered');
+                        }
+                        else {
+                            throw new Error('REASON - ' + await salt_response.text());
+                        }
+
+                    }
+                    catch (error) {
+                        console.log('ERROR - Error during registration of admin password salt => ' + error);
+                    }
+
+                }
+                else {
+                    console.log('INFO - admin password salt already set');
+                }
+
+            }
+            catch (error) {
+                console.log('ERROR - Error during fetching admin password salt => ' + error);
             }
 
         }
@@ -281,7 +287,7 @@ class PersonService {
 
     private async fetchUserPasswordHash(username: string): Promise<Error | string> {
 
-        const admin_hash_response = await fetch('http://localhost:3044/api/password-hash/username', {
+        const admin_hash_response = await fetch('http://localhost:3033/api/password-hash/username', {
             method: 'POST',
             body: JSON.stringify({ username }),
             headers: { 'Content-Type': 'application/json' }

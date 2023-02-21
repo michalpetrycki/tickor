@@ -1,20 +1,18 @@
 import { Model, DataTypes } from 'sequelize';
-import bcrypt from 'bcrypt';
 import connection from '@/utils/databaseConnection';
+import * as argon2 from 'argon2';
 
 const sequelize = connection;
 
 class PersonModel extends Model {
-    
-    isPasswordValid(password: string): Promise<Error | boolean> {
+
+    isPasswordValid(password: string, passwordHash: string): Promise<Error | boolean> {
 
         try {
-            return bcrypt.compare(password, this.getDataValue('password'));
-            bcrypt.compareSync
+            return argon2.verify(passwordHash, password);
         }
         catch (error) {
-            console.log(error);
-            throw new Error();
+            throw new Error('ERROR - Password is not valid => ' + error);
         }
 
     }
@@ -38,7 +36,7 @@ PersonModel.init({
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        set (value) {
+        set(value) {
             this.setDataValue('email', (value as string).trim());
         },
         validate: {
@@ -50,26 +48,14 @@ PersonModel.init({
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isIn: [[ 'administrator', 'robot', 'joe' ]]
+            isIn: [['administrator', 'robot', 'joe']]
         }
     }
 }, {
     sequelize,
     freezeTableName: true,
     modelName: 'Person',
-    timestamps: false,
-    // hooks: {
-    //     beforeCreate: async (person, options) => {
-    //         try {
-    //             const salt = bcrypt.genSaltSync();
-    //             const hash = bcrypt.hashSync(person.getDataValue('password'), salt);
-    //             person.setDataValue('password', hash);
-    //         }
-    //         catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    // }
+    timestamps: false
 });
 
 export default PersonModel;

@@ -64,10 +64,10 @@ class PasswordSaltController implements Controller {
 
             const { username } = req.body;
 
-            const salt = await this.PasswordSaltService.getPasswordSaltForUsername(username);
+            const user_salt = await this.PasswordSaltService.getPasswordSaltForUsername(username);
 
             // Status is ok 200 as nothing has been created
-            res.status(200).json({ salt });
+            res.status(200).json({ user_salt });
 
         }
         catch (error: any) {

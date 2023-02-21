@@ -22,11 +22,11 @@ PasswordHashModel.init({
         }
     },
     password_hash: {
-        type: DataTypes.STRING(60),
+        type: DataTypes.STRING(105),
         allowNull: false,
         validate: {
             notNull: { msg: 'password_hash is required' },
-            len: { args: [0, 60], msg: 'password_hash exceeds maximum (60) length' }
+            len: { args: [0, 105], msg: 'password_hash exceeds maximum (60) length' }
         }
     }
 }, {
