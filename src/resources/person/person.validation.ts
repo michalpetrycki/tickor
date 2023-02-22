@@ -17,6 +17,7 @@ const register = Joi.object({
         'string.base': 'password should be a string'
     }),
     kind: Joi.string().allow('administrator', 'robot', 'joe').messages({
+        'string.base': 'kind should be a string',
         'any.allow': 'kind should be `administrator`, `robot` or `joe`'
     })
 

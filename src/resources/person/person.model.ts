@@ -48,7 +48,7 @@ PersonModel.init({
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isIn: [['administrator', 'robot', 'joe']]
+            isIn: { msg: 'Kind should be `administrator`, `robot` or `joe`', args: [['administrator', 'robot', 'joe']] }
         }
     }
 }, {

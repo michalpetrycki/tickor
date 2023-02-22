@@ -18,10 +18,27 @@ class PersonService {
 
         try {
 
-            const person = await this.personModel.create({ username, email, password, kind });
+            const person = await this.personModel.create({ username, email, kind });
+            const [passSalt, passHash] = await this.extractPasswordHashAndSalt(password);
+
+            const hashResponse = await this.registerPasswordHash(2, passHash, username);
+            const saltResponse = await this.registerPasswordSalt(2, passSalt, username);
+
+            if (hashResponse instanceof Error) {
+                throw hashResponse;
+            }
+            else {
+                console.info(hashResponse);
+            }
+
+            if (saltResponse instanceof Error) {
+                throw saltResponse;
+            }
+            else {
+                console.info(saltResponse);
+            }
 
             const accessToken = token.createToken(person);
-
             return accessToken;
 
         }
@@ -161,25 +178,7 @@ class PersonService {
 
         if (adminAccount instanceof PersonModel) {
 
-            let passSalt, passHash, hashWithoutSalt = '';
-
-            try {
-
-                const generatedHash = await argon2.hash(env.adminPassword, {
-                    type: argon2.argon2id, // recommended here https://crypto.stackexchange.com/a/72437 
-                });
-
-                const generatedHashBits = generatedHash.split('$');
-                passSalt = generatedHashBits[4];
-                passHash = generatedHashBits[5];
-
-                generatedHashBits[4] = 'insertsalthere';
-                hashWithoutSalt = generatedHashBits.join('$');
-
-            }
-            catch (error) {
-                console.log('ERROR - Error during generating hash => ' + error);
-            }
+            const [passSalt, passHash] = await this.extractPasswordHashAndSalt(env.adminPassword);
 
             try {
 
@@ -193,17 +192,13 @@ class PersonService {
 
                     try {
 
-                        const hash_response = await fetch('http://localhost:3033/api/password-hash/register', {
-                            method: 'POST',
-                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_hash: hashWithoutSalt }),
-                            headers: { 'Content-Type': 'application/json' }
-                        });
+                        const hash_response = await this.registerPasswordHash(1, passHash, env.adminLogin);
 
-                        if (hash_response.status === 201) {
-                            console.info('SUCCESS - Admin password hash successfully registered');
+                        if (hash_response instanceof Error) {
+                            throw hash_response;
                         }
                         else {
-                            throw new Error('REASON - ' + await hash_response.text());
+                            console.info(hash_response);
                         }
 
                     }
@@ -233,17 +228,13 @@ class PersonService {
 
                     try {
 
-                        const salt_response = await fetch('http://localhost:3044/api/password-salt/register', {
-                            method: 'POST',
-                            body: JSON.stringify({ id: 1, username: env.adminLogin, password_salt: passSalt }),
-                            headers: { 'Content-Type': 'application/json' }
-                        });
+                        const salt_response = await this.registerPasswordSalt(1, passSalt, env.adminLogin);
 
-                        if (salt_response.status === 201) {
-                            console.info('SUCCESS - Admin password salt successfully registered');
+                        if (salt_response instanceof Error) {
+                            throw salt_response;
                         }
                         else {
-                            throw new Error('REASON - ' + await salt_response.text());
+                            console.info(salt_response);
                         }
 
                     }
@@ -265,6 +256,78 @@ class PersonService {
         else {
             console.error('ERROR - Admin account not found');
         }
+
+    }
+
+    private async generatePasswordHash(password: string): Promise<string> {
+
+        return argon2.hash(env.adminPassword, {
+            type: argon2.argon2id, // recommended here https://crypto.stackexchange.com/a/72437 
+        });
+
+    }
+
+    private async extractPasswordHashAndSalt(password: string): Promise<string[]> {
+
+        const passwordBits: string[] = [];
+
+        try {
+
+            const generatedHash = await this.generatePasswordHash(password);
+            const generatedHashBits = generatedHash.split('$');
+            passwordBits[0] = generatedHashBits[4]; // salt
+            generatedHashBits[4] = 'insertsalthere';
+            passwordBits[1] = generatedHashBits.join('$'); // hashWithoutSalt
+
+        }
+        catch (error) {
+            console.log('ERROR - Error during generating hash => ' + error);
+        }
+        finally {
+            return passwordBits;
+        }
+
+    }
+
+    private async registerPasswordHash(id: number, hashWithoutSalt: string, username: string): Promise<string | Error> {
+
+        return new Promise<string | Error>(async (resolve) => {
+
+            const hash_response = await fetch('http://localhost:3033/api/password-hash/register', {
+                method: 'POST',
+                body: JSON.stringify({ id, username, password_hash: hashWithoutSalt }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (hash_response.status === 201) {
+                resolve(`SUCCESS - User ${username} password hash successfully registered`);
+            }
+            else {
+                resolve(new Error('REASON - ' + await hash_response.text()));
+            }
+
+        });
+
+    }
+
+    private async registerPasswordSalt(id: number, passwordSalt: string, username: string): Promise<string | Error> {
+
+        return new Promise<string | Error>(async (resolve) => {
+
+            const salt_response = await fetch('http://localhost:3044/api/password-salt/register', {
+                method: 'POST',
+                body: JSON.stringify({ id, username, password_salt: passwordSalt }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (salt_response.status === 201) {
+                resolve(`SUCCESS - User ${username} password salt successfully registered`);
+            }
+            else {
+                resolve(new Error('REASON - ' + await salt_response.text()));
+            }
+
+        });
 
     }
 
