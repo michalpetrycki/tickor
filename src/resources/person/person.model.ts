@@ -29,7 +29,8 @@ PersonModel.init({
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            notNull: { msg: 'username is required' }
+            notNull: { msg: 'username is required' },
+            notEmpty: { msg: 'username cannot be an empty string' }
         }
     },
     email: {
@@ -41,14 +42,17 @@ PersonModel.init({
         },
         validate: {
             isEmail: true,
-            notNull: { msg: 'email is required' }
+            notNull: { msg: 'email is required' },
+            notEmpty: { msg: 'email cannot be an empty string' }
         }
     },
     kind: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isIn: { msg: 'Kind should be `administrator`, `robot` or `joe`', args: [['administrator', 'robot', 'joe']] }
+            notNull: { msg: 'kind is required' },
+            notEmpty: { msg: 'kind cannot be an empty string' },
+            isIn: { msg: 'Kind should be one of [`administrator`, `robot` or `joe`]', args: [['administrator', 'robot', 'joe']] }
         }
     }
 }, {

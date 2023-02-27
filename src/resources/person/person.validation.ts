@@ -16,9 +16,9 @@ const register = Joi.object({
         'string.min': 'password too short',
         'string.base': 'password should be a string'
     }),
-    kind: Joi.string().allow('administrator', 'robot', 'joe').messages({
+    kind: Joi.string().valid('administrator', 'robot', 'joe').messages({
         'string.base': 'kind should be a string',
-        'any.allow': 'kind should be `administrator`, `robot` or `joe`'
+        'any.only': 'kind should be one of [`administrator`, `robot` or `joe`]'
     })
 
 });
@@ -45,4 +45,14 @@ const login = Joi.object({
     })
 });
 
-export default { register, login };
+const deletePerson = Joi.object({
+
+    id: Joi.number().required().positive().messages({
+        'any.required': 'id is required',
+        'number.base': 'id should be a number',
+        'number.positive': 'id should be a positive number'
+    })
+
+});
+
+export default { register, login, deletePerson };

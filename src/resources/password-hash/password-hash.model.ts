@@ -18,6 +18,7 @@ PasswordHashModel.init({
         unique: true,
         validate: {
             notNull: { msg: 'username is required' },
+            notEmpty: { msg: 'username cannot be an empty string' },
             len: { args: [0, 40], msg: 'username exceeds maximum (40) length' }
         }
     },
@@ -26,6 +27,7 @@ PasswordHashModel.init({
         allowNull: false,
         validate: {
             notNull: { msg: 'password_hash is required' },
+            notEmpty: { msg: 'password_hash cannot be an empty string' },
             len: { args: [0, 105], msg: 'password_hash exceeds maximum (60) length' }
         }
     }

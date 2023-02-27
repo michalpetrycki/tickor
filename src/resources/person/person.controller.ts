@@ -5,8 +5,6 @@ import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/person/person.validation';
 import PersonService from '@/resources/person/person.service';
 import authenticated from '@/middleware//authenticated.middleware';
-import status from 'http-status';
-import PersonModel from '@/resources/person/person.model';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class PersonController implements Controller {
@@ -48,7 +46,13 @@ class PersonController implements Controller {
         this.router.post(
             `${this.path}/edit`,
             authenticated,
-            this.editPerson
+            this.edit
+        );
+
+        this.router.delete(
+            `${this.path}/delete`,
+            [validationMiddleware(validate.deletePerson), authenticated],
+            this.delete
         );
 
     }
@@ -127,32 +131,42 @@ class PersonController implements Controller {
 
     };
 
-    private editPerson = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    private edit = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+
+        try {
+
+            const { id, username, email, kind } = req.body;
+
+            const result = await this.PersonService.editPerson(id, username, email, kind);
+
+            if (!result) {
+                res.status(400).json({ message: 'id does not specify a valid person id' });
+            }
+            else {
+                res.status(200).json({ result });
+            }
+
+        }
+        catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+
+    };
+
+    private delete = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 
         try {
 
             const { id } = req.body;
-            const personToEdit = await this.PersonService.getById(id);
 
-            if (!personToEdit || personToEdit instanceof Error) {
+            const success = await this.PersonService.deletePerson(id);
 
-                // Status 204 - No content
-                res.status(204).json('id does not specify a valid person');
-
-
+            if (!success) {
+                res.status(400).json({ message: 'id does not specify a valid person id' });
             }
             else {
-
-                personToEdit.set({
-                    username: req.body.username ?? personToEdit.getDataValue('username'),
-                    email: req.body.email ?? personToEdit.getDataValue('email'),
-                    kind: req.body.kind ?? personToEdit.getDataValue('kind')
-                });
-                personToEdit.save();
-
                 // Status is ok 200 as nothing has been created
-                res.status(200).json({ personToEdit });
-
+                res.status(200).json({ success });
             }
 
         }

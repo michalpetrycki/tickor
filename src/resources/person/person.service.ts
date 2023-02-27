@@ -139,33 +139,50 @@ class PersonService {
 
         }
         catch (error) {
-            throw new Error('no person with given email found');
+            throw new Error('ERROR - no person with given email found');
         }
 
     }
 
-    public async getById(id: number): Promise<Error | Person> {
+    public async getById(id: number): Promise<PersonModel | null> {
+        return await this.personModel.findByPk(id);
+    }
 
+    public async editPerson(id: number, username: string, email: string, kind: string): Promise<PersonModel | null> {
+
+        const personToEdit = await this.getById(id);
+
+        if (!!personToEdit) {
+            personToEdit.set({
+                username: username ?? personToEdit.getDataValue('username'),
+                email: email ?? personToEdit.getDataValue('email'),
+                kind: kind ?? personToEdit.getDataValue('kind')
+            });
+            personToEdit.save();
+        }
+
+        return personToEdit;
+
+    }
+
+    public async deletePerson(id: number): Promise<boolean> {
         try {
-            const existingPerson = await this.personModel.findByPk(id);
 
-            if (!existingPerson) {
-                throw new Error('id does not specify a valid person');
+            let success = false;
+            const personToDelete = await this.getById(id);
+
+            if (!!personToDelete) {
+                personToDelete.destroy();
+                success = true;
+                console.log(`INFO - person with id {${id}} successfully deleted`);
             }
-            else {
-                return existingPerson;
-            }
+
+            return success;
 
         }
         catch (error) {
-            throw new Error('Error during fetching by id: ' + error);
+            throw new Error('ERROR - error during deleting person. Reason => ' + error);
         }
-
-    }
-
-    public async insertInitialPersonData(): Promise<void> {
-
-
 
     }
 

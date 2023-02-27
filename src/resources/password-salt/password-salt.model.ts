@@ -18,6 +18,7 @@ PasswordSaltModel.init({
         unique: true,
         validate: {
             notNull: { msg: 'username is required' },
+            notEmpty: { msg: 'username cannot be an empty string' },
             len: { args: [0, 40], msg: 'username exceeds maximum (40) length' }
         }
     },
@@ -26,6 +27,7 @@ PasswordSaltModel.init({
         allowNull: false,
         validate: {
             notNull: { msg: 'password_salt is required' },
+            notEmpty: { msg: 'password_salt cannot be an empty string' },
             len: { args: [0, 32], msg: 'password_salt exceeds maximum (32) length' }
         }
     }

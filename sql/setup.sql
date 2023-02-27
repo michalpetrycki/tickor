@@ -17,14 +17,19 @@ CREATE TABLE Person (
 );
 
 CREATE TABLE Project (
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (40) NOT NULL,
     active BIT DEFAULT 0,
     clientID INT NOT NULL FOREIGN KEY REFERENCES Client (id)
 );
 CREATE TABLE Ticket (
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (40) NOT NULL
+);
+CREATE TABLE Company (
+    id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    name NVARCHAR (120) NOT NULL,
+    kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('company', 'contractor', 'customer'))
 );
 GO
 INSERT INTO Person (email, username, kind) 
