@@ -5,6 +5,7 @@ import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/person/person.validation';
 import PersonService from '@/resources/person/person.service';
 import authenticated from '@/middleware//authenticated.middleware';
+import status from 'http-status';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class PersonController implements Controller {
@@ -37,11 +38,11 @@ class PersonController implements Controller {
             this.getPerson
         );
 
-        this.router.get(
-            `${this.path}`,
-            authenticated,
-            this.getAll)
-            ;
+        this.router.post(
+            `${this.path}/list`,
+            // authenticated,
+            this.getAll
+        );
 
         this.router.post(
             `${this.path}/edit`,
@@ -114,13 +115,13 @@ class PersonController implements Controller {
             if (Array.isArray(persons) && persons.length > 0) {
 
                 // Status is ok 200 as nothing has been created
-                res.status(200).json({ persons });
+                res.json({ status: 200, message: status[200], results: persons });
 
             }
             else if (Array.isArray(persons) && persons.length === 0) {
 
                 // Status 204 - No content
-                res.status(204).json()
+                res.json({ status: 204, message: status[204] });
 
             }
 

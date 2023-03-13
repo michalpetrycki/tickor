@@ -8,12 +8,20 @@ import HealthCheckController from '@/resources/health-check/health-check.control
 import PasswordHashController from '@/resources/password-hash/password-hash.controller';
 import PasswordSaltController from '@/resources/password-salt/password-salt.controller';
 import CompanyController from '@/resources/company/company.controller';
+import ClientController from '@/resources/client/client.controller';
+import ProjectController from '@/resources/project/project.controller';
 
 // validateEnv();
 
 // dotenv.config();
 
-const tickorApp = new TickorApp([new HealthCheckController(), new PersonController(), new CompanyController()], 3000);
+const tickorApp = new TickorApp([
+    new HealthCheckController(), 
+    new PersonController(), 
+    new CompanyController(), 
+    new ClientController(),
+    new ProjectController()
+], 3000);
 const passwordHashApp = new PasswordHashApp([new HealthCheckController(), new PasswordHashController()], 3033);
 const passwordSaltApp = new PasswordSaltApp([new HealthCheckController(), new PasswordSaltController()], 3044);
 

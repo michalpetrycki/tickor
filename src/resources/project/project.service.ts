@@ -8,87 +8,85 @@ import PasswordHash from '@/resources/password-hash/password-hash.interface';
 import PasswordSalt from '@/resources/password-salt/password-salt.interface';
 import CompanyModel from '@/resources/company/company.model';
 import ClientModel from '@/resources/client/client.model';
+import ProjectModel from '@/resources/project/project.model';
 
-class ClientService {
+class ProjectService {
 
-    private clientModel = ClientModel;
+    private projectModel = ProjectModel;
 
-    public async getById(id: number): Promise<ClientModel | null> {
-        return await this.clientModel.findByPk(id);
+    public async getById(id: number): Promise<ProjectModel | null> {
+        return await this.projectModel.findByPk(id);
     }
 
-    /**
-     * Attempt to login a person
-     */
-    public async createClient(id: number, name: string, kind: string): Promise<Error | ClientModel> {
+    public async createProject(id: number, name: string, kind: string): Promise<Error | ClientModel> {
         try {
 
-            const newClient = await this.clientModel.create({ id, name, kind });
-            console.log('INFO - new client successfully created');
-            return newClient;
+            const newProject = await this.projectModel.create({ id, name, kind });
+            console.log('INFO - new project successfully created');
+            return newProject;
 
         }
         catch (error) {
-            throw new Error('ERROR - error during creation of client. Reason => ' + error);
+            throw new Error('ERROR - error during creation of project. Reason => ' + error);
         }
 
     }
 
-    public async editClient(id: number, name: string, kind: string): Promise<ClientModel | null> {
+    public async editProject(id: number, name: string, kind: string): Promise<ProjectModel | null> {
 
-        const clientToEdit = await this.getById(id);
+        const projectToEdit = await this.getById(id);
 
-        if (!!clientToEdit) {
+        if (!!projectToEdit) {
 
             try {
-                clientToEdit.set({
-                    name: name ?? clientToEdit.getDataValue('name'),
-                    kind: kind ?? clientToEdit.getDataValue('kind')
+                projectToEdit.set({
+                    name: name ?? projectToEdit.getDataValue('name'),
+                    kind: kind ?? projectToEdit.getDataValue('kind')
                 });
-                await clientToEdit.save();
-                console.log(`INFO - client edited successfully`);
+                await projectToEdit.save();
+                console.log(`INFO - project edited successfully`);
             }
             catch (error: any) {
-                throw new Error('ERROR - during updating the client. Reason => ' + error.message);
+                throw new Error('ERROR - during updating the project. Reason => ' + error.message);
             }
 
         }
 
-        return clientToEdit;
+        return projectToEdit;
 
     }
 
-    public async deleteClient(id: number): Promise<boolean> {
+    public async deleteProject(id: number): Promise<boolean> {
         try {
 
             let success = false;
-            const clientToDelete = await this.getById(id);
+            const projectToDelete = await this.getById(id);
 
-            if (!!clientToDelete) {
-                clientToDelete.destroy();
+            if (!!projectToDelete) {
+                projectToDelete.destroy();
                 success = true;
-                console.log(`INFO - client with id {${id}} successfully deleted`);
+                console.log(`INFO - project with id {${id}} successfully deleted`);
             }
 
             return success;
 
         }
         catch (error) {
-            throw new Error('ERROR - error during deleting the client. Reason => ' + error);
+            throw new Error('ERROR - error during deleting the project. Reason => ' + error);
         }
 
     }
 
-    public async listClients(): Promise<ClientModel[] | null> {
+    public async listProjects(): Promise<ProjectModel[] | null> {
 
         try { 
-            const clients = await this.clientModel.findAll();
-            console.log('INFO - clients successfully fetched');
-            return clients;
+            const projects = await this.projectModel.findAll();
+            console.log('INFO - projects successfully fetched');
+            return projects;
 
         }
         catch (error) { 
-            throw new Error('ERROR - error during fetchig all clients. Reason => ' + error);
+            throw new Error('ERROR - error during fetchig all projects. Reason => ' + error);
         }
 
     }
@@ -387,4 +385,4 @@ class ClientService {
 
 }
 
-export default ClientService;
+export default ProjectService;
