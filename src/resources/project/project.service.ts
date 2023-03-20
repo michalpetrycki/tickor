@@ -18,10 +18,10 @@ class ProjectService {
         return await this.projectModel.findByPk(id);
     }
 
-    public async createProject(id: number, name: string, kind: string): Promise<Error | ClientModel> {
+    public async createProject(id: number, name: string, active: boolean, clientID: number): Promise<Error | ClientModel> {
         try {
 
-            const newProject = await this.projectModel.create({ id, name, kind });
+            const newProject = await this.projectModel.create({ id, name, active, clientID });
             console.log('INFO - new project successfully created');
             return newProject;
 

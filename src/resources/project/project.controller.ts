@@ -2,8 +2,7 @@ import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 import HttpException from '@/utils/exceptions/http.exception';
 import validationMiddleware from '@/middleware/validation.middleware';
-import validate from '@/resources/company/company.validation';
-import ClientService from '@/resources/client/client.service';
+import validate from '@/resources/project/project.validation';
 import status from 'http-status';
 import ProjectService from '@/resources/project/project.service';
 
@@ -34,7 +33,7 @@ class ProjectController implements Controller {
 
         this.router.delete(
             `${this.path}/delete`,
-            validationMiddleware(validate.deleteCompany),
+            validationMiddleware(validate.remove),
             this.delete
         );
 
@@ -50,12 +49,14 @@ class ProjectController implements Controller {
 
         try {
 
-            const { id, name, kind } = req.body;
+            
 
-            const newProject = await this.ProjectService.createProject(id, name, kind);
+            const { id, name, active, clientID } = req.body;
+
+            const newProject = await this.ProjectService.createProject(id, name, active, clientID);
 
             // 201 if something is created
-            res.status(201).json({ result: newProject });
+            res.status(201).json({ status: 201, message: status[201], result: newProject });
 
         }
         catch (error: any) {
