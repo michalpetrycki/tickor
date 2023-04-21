@@ -23,6 +23,24 @@ const register = Joi.object({
 
 });
 
+const create = Joi.object({
+
+    username: Joi.string().required().max(30).messages({
+        'any.required': 'username is required',
+        'string.max': 'username exceeds allowed number of characters',
+        'string.base': 'username should be a string'
+    }),
+    email: Joi.string().email().required().messages({
+        'any.required': 'email is required',
+        'string.email': 'not a valid email address'
+    }),
+    kind: Joi.string().valid('administrator', 'robot', 'joe').messages({
+        'string.base': 'kind should be a string',
+        'any.only': 'kind should be one of [`administrator`, `robot` or `joe`]'
+    })
+
+});
+
 // const login = Joi.object({
 //     email: Joi.string().email().required().messages({
 //         'any.required': 'email is required',
@@ -55,4 +73,4 @@ const deletePerson = Joi.object({
 
 });
 
-export default { register, login, deletePerson };
+export default { register, login, create, deletePerson };

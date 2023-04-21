@@ -49,8 +49,6 @@ class ProjectController implements Controller {
 
         try {
 
-            
-
             const { id, name, active, clientID } = req.body;
 
             const newProject = await this.ProjectService.createProject(id, name, active, clientID);

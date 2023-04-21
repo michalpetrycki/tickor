@@ -44,6 +44,12 @@ class PersonController implements Controller {
             this.getAll
         );
 
+        // this.router.post(
+        //     `${this.path}/create`,
+        //     [validationMiddleware(validate.create)],
+        //     this.create
+        // );
+
         this.router.post(
             `${this.path}/edit`,
             authenticated,
@@ -124,6 +130,24 @@ class PersonController implements Controller {
                 res.json({ status: 204, message: status[204] });
 
             }
+
+        }
+        catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+
+    };
+
+    private create = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+
+        try {
+
+            const { id, username, email, kind } = req.body;
+
+            const newPerson = await this.PersonService.createPerson(id, username, email, kind);
+
+            // 201 if something is created
+            res.status(201).json({ status: 201, message: status[201], result: newPerson });
 
         }
         catch (error: any) {

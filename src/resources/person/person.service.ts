@@ -148,6 +148,20 @@ class PersonService {
         return await this.personModel.findByPk(id);
     }
 
+    public async createPerson(id: number, username: string, email: string, kind: string): Promise<Error | PersonModel> {
+        try {
+
+            const newProject = await this.personModel.create({ id, username, email, kind });
+            console.log('INFO - new person successfully created');
+            return newProject;
+
+        }
+        catch (error) {
+            throw new Error('ERROR - error during creation of person. Reason => ' + error);
+        }
+
+    }
+
     public async editPerson(id: number, username: string, email: string, kind: string): Promise<PersonModel | null> {
 
         const personToEdit = await this.getById(id);

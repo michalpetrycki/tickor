@@ -1,12 +1,3 @@
-import token from '@/utils/token';
-import Person from '@/resources/person/person.model';
-import PersonModel from '@/resources/person/person.model';
-import { default as env } from '@/utils/config/config';
-import fetch from 'cross-fetch';
-import * as argon2 from 'argon2';
-import PasswordHash from '@/resources/password-hash/password-hash.interface';
-import PasswordSalt from '@/resources/password-salt/password-salt.interface';
-import CompanyModel from '@/resources/company/company.model';
 import ClientModel from '@/resources/client/client.model';
 import ProjectModel from '@/resources/project/project.model';
 
@@ -18,7 +9,7 @@ class ProjectService {
         return await this.projectModel.findByPk(id);
     }
 
-    public async createProject(id: number, name: string, active: boolean, clientID: number): Promise<Error | ClientModel> {
+    public async createProject(id: number, name: string, active: boolean, clientID: number): Promise<Error | ProjectModel> {
         try {
 
             const newProject = await this.projectModel.create({ id, name, active, clientID });
