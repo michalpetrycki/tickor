@@ -37,7 +37,7 @@ class ProjectController implements Controller {
             this.delete
         );
 
-        this.router.post(
+        this.router.get(
             `${this.path}/list`,
             // validationMiddleware(validate.list),
             this.list
