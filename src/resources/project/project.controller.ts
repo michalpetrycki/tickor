@@ -49,9 +49,9 @@ class ProjectController implements Controller {
 
         try {
 
-            const { id, name, active, clientID } = req.body;
+            const { id, name, active, clientID, logo } = req.body;
 
-            const newProject = await this.ProjectService.createProject(id, name, active, clientID);
+            const newProject = await this.ProjectService.createProject(id, name, active, clientID, logo);
 
             // 201 if something is created
             res.status(201).json({ status: 201, message: status[201], result: newProject });
@@ -67,9 +67,9 @@ class ProjectController implements Controller {
 
         try {
 
-            const { id, name, kind } = req.body;
+            const { id, name, kind, logo } = req.body;
 
-            const result = await this.ProjectService.editProject(id, name, kind);
+            const result = await this.ProjectService.editProject(id, name, kind, logo);
 
             if (!result) {
                 res.status(400).json({ message: 'id does not specify a valid project id' });

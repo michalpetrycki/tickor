@@ -16,7 +16,11 @@ ClientModel.init({
         validate: {
             isIn: [['person', 'company']]
         }
-    }
+    },
+    logo: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 }, {
     sequelize,
     freezeTableName: true,

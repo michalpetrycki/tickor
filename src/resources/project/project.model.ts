@@ -17,6 +17,10 @@ ProjectModel.init({
     clientID: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    logo: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     sequelize,

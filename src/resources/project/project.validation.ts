@@ -14,7 +14,12 @@ const create = Joi.object({
     clientID: Joi.number().required().messages({
         'any.required': 'clientID is required',
         'number.base': 'clientID should be a number'
-    })
+    }),
+    logo: Joi.string().required().max(480).messages({
+        'any.required': 'logo is required',
+        'string.max': 'logo exceeds allowed number of characters',
+        'string.base': 'logo should be a string'
+    }),
 
 });
 
@@ -30,7 +35,12 @@ const edit = Joi.object({
     clientID: Joi.number().required().messages({
         'any.required': 'clientID is required',
         'number.base': 'clientID should be a number'
-    })
+    }),
+    logo: Joi.string().required().max(480).messages({
+        'any.required': 'logo is required',
+        'string.max': 'logo exceeds allowed number of characters',
+        'string.base': 'logo should be a string'
+    }),
 });
 
 const remove = Joi.object({

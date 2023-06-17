@@ -1,4 +1,3 @@
-import ClientModel from '@/resources/client/client.model';
 import ProjectModel from '@/resources/project/project.model';
 
 class ProjectService {
@@ -9,10 +8,10 @@ class ProjectService {
         return await this.projectModel.findByPk(id);
     }
 
-    public async createProject(id: number, name: string, active: boolean, clientID: number): Promise<Error | ProjectModel> {
+    public async createProject(id: number, name: string, active: boolean, clientID: number, logo: string): Promise<Error | ProjectModel> {
         try {
 
-            const newProject = await this.projectModel.create({ id, name, active, clientID });
+            const newProject = await this.projectModel.create({ id, name, active, clientID, logo });
             console.log('INFO - new project successfully created');
             return newProject;
 
@@ -23,7 +22,7 @@ class ProjectService {
 
     }
 
-    public async editProject(id: number, name: string, kind: string): Promise<ProjectModel | null> {
+    public async editProject(id: number, name: string, kind: string, logo: string): Promise<ProjectModel | null> {
 
         const projectToEdit = await this.getById(id);
 
@@ -32,7 +31,8 @@ class ProjectService {
             try {
                 projectToEdit.set({
                     name: name ?? projectToEdit.getDataValue('name'),
-                    kind: kind ?? projectToEdit.getDataValue('kind')
+                    kind: kind ?? projectToEdit.getDataValue('kind'),
+                    logo: logo ?? projectToEdit.getDataValue('logo')
                 });
                 await projectToEdit.save();
                 console.log(`INFO - project edited successfully`);
