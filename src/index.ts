@@ -10,6 +10,8 @@ import PasswordSaltController from '@/resources/password-salt/password-salt.cont
 import CompanyController from '@/resources/company/company.controller';
 import ClientController from '@/resources/client/client.controller';
 import ProjectController from '@/resources/project/project.controller';
+import IssueController from '@/resources/issue/issue.controller';
+import IssueCategoryController from '@/resources/issue-category/issue-category.controller';
 
 // validateEnv();
 
@@ -20,7 +22,9 @@ const tickorApp = new TickorApp([
     new PersonController(), 
     new CompanyController(), 
     new ClientController(),
-    new ProjectController()
+    new ProjectController(),
+    new IssueController(),
+    new IssueCategoryController()
 ], 3000);
 const passwordHashApp = new PasswordHashApp([new HealthCheckController(), new PasswordHashController()], 3033);
 const passwordSaltApp = new PasswordSaltApp([new HealthCheckController(), new PasswordSaltController()], 3044);

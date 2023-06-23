@@ -24,10 +24,26 @@ CREATE TABLE Project (
     logo NVARCHAR (480),
     clientID INT NOT NULL FOREIGN KEY REFERENCES Client (id)
 );
-CREATE TABLE Ticket (
+
+CREATE TABLE IssueCategory (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (40) NOT NULL
 );
+
+CREATE TABLE IssueStatus (
+    id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    name NVARCHAR (40) NOT NULL
+);
+
+CREATE TABLE Issue (
+    id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
+    statusID INT FOREIGN KEY REFERENCES IssueStatus (id),
+    subject NVARCHAR (200),
+    updated NVARCHAR (18),
+    name NVARCHAR (40) NOT NULL,
+    categoryID INT FOREIGN KEY REFERENCES IssueCategory (id)
+);
+
 CREATE TABLE Company (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (120) NOT NULL,
@@ -50,26 +66,43 @@ INSERT INTO Client (name, kind, logo)
     VALUES('Unibottled', 'company', 'https://static.vecteezy.com/system/resources/previews/011/742/444/large_2x/isolated-illustration-of-a-bottle-of-maple-syrup-packaging-design-template-logo-free-vector.jpg');
 GO
 
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Fresh Fashion', 1, 'https://img.freepik.com/free-vector/creative-hurricane-logo-template_23-2149209625.jpg?w=826&t=st=1686164718~exp=1686165318~hmac=da5767ab7302fbfc461e2a0b5b3b9957f5ebf2bb4c72bd8f5c9b8070bedbf953', 1);
-INSERT INTO Project(name, active, logo, clientID)
+INSERT INTO Project (name, active, logo, clientID)
     VALUES('Chic Choice', 1, 'https://venngage-wordpress.s3.amazonaws.com/uploads/2021/12/House-Agent-Broker-Business-Logo-Template.png', 2);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Modern Maven', 1, 'https://images.template.net/wp-content/uploads/2014/09/Farm-Logo.jpg?width=550', 3);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Trendy Twist', 1, 'https://marketplace.canva.com/EAE9407gQAE/1/0/1600w/canva-rose-gold-photography-circle-logo-9uq8B--Pjcs.jpg', 2);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Refined Runway', 1, 'https://media.istockphoto.com/id/1055624048/vector/microscope-and-monitor-logo-design-scientific-research-vector-design-medical-laboratory.webp?s=2048x2048&w=is&k=20&c=vUQKx3HUulP9Jv-Tt0fLA9IGGAPbRubZbynaBYQ6b-Q=', 3);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Snazzy Solutions', 1, 'https://images.template.net/wp-content/uploads/2014/09/Flare-Focus.jpg?width=550', 1);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Polished Pizzazz', 1, 'https://seeklogo.com/images/A/animulus-cracked-circle-t-shirt-logo-5607C4CB58-seeklogo.com.png', 1);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Elegant Edge', 1, 'https://cdn4.vectorstock.com/i/1000x1000/41/03/bird-company-logo-template-design-vector-33654103.jpg', 3);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Swanky Selections', 1, 'https://graphicsfamily.com/wp-content/uploads/edd/2023/06/Cristian-Stone-Spedition-999x999.jpg', 2);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Dapper Desings', 1, 'https://image.pngaaa.com/95/2572095-middle.png', 2);
-INSERT INTO Project(name, active, logo, clientID) 
+INSERT INTO Project (name, active, logo, clientID) 
     VALUES('Styling Sensei', 1, 'https://static.vecteezy.com/system/resources/previews/020/806/106/large_2x/chocolate-logo-sample-vector.jpg', 3);
+GO
+
+INSERT INTO IssueCategory (name) VALUES ('New feature');
+INSERT INTO IssueCategory (name) VALUES ('Bug');
+GO
+
+INSERT INTO IssueStatus (name) VALUES ('open');
+INSERT INTO IssueStatus (name) VALUES ('approved');
+INSERT INTO IssueStatus (name) VALUES ('closed');
+INSERT INTO IssueStatus (name) VALUES ('hold');
+INSERT INTO IssueStatus (name) VALUES ('closure request');
+GO
+
+INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (2, 'Implement new big feature', '2023-06-23', 'Big boy', 1);
+INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (3, 'There''s a snake in my shoe', '2023-03-23', 'Ssssnake', 2);
+INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (4, 'Modal doesn''t close properly on X click', '2023-04-23', 'Stupid modal', 2);
+INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (5, 'Request for super duper shiny modal', '2023-05-23', 'Shining star', 1);
 GO
