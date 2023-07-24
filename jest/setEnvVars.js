@@ -1,1 +1,1 @@
-process.env.MY_CUSTOM_TEST_ENV_VAR = 'abcd';
+process.env.USE_TEST_DATABASE = '';
