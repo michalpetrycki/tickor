@@ -29,18 +29,20 @@ class IssueController implements Controller {
         this.router.post(
             `${this.path}/create`,
             [validationMiddleware(validate.create)],
+            // [validationMiddleware(validate.create), authenticated],
             this.create
         );
 
         this.router.post(
             `${this.path}/edit`,
-            authenticated,
+            [validationMiddleware(validate.edit)],
+            // [validationMiddleware(validate.edit), authenticated],
             this.edit
         );
 
         this.router.delete(
             `${this.path}/delete`,
-            [validationMiddleware(validate.deleteIssue), authenticated],
+            // [validationMiddleware(validate.deleteIssue), authenticated],
             this.delete
         );
 
@@ -52,12 +54,12 @@ class IssueController implements Controller {
 
             const { id, statusID, subject, updated, name, categoryID } = req.body;
 
-            if (await this.IssueService.lookupCategory(categoryID) === null) {
-                next(new HttpException(400, 'status does not specify a valid issue category ID'))
+            if (categoryID != null && await this.IssueService.lookupCategory(categoryID) === null) {
+                next(new HttpException(400, 'categoryID does not specify a valid issue category ID'));
             }
 
-            if (await this.IssueService.lookupStatus(statusID) === null) {
-                next(new HttpException(400, 'status does not specify a valid issue status ID'))
+            if (statusID != null && await this.IssueService.lookupStatus(statusID) === null) {
+                next(new HttpException(400, 'statusID does not specify a valid issue status ID'));
             }
 
             const listFilter = Object.assign({},
@@ -91,11 +93,19 @@ class IssueController implements Controller {
 
         try {
 
-            const { statusID, subject, updated, name, categoryID } = req.body;
+            const { subject, updated, name, categoryID } = req.body;
 
-            // const newIssue = await this.IssueService.createIssue(statusID, subject, updated, name, categoryID);
+            if (name == null) {
+                next(new HttpException(400, 'name should be a string'));
+            }
 
-            // res.status(201).json({ status: 201, message: status[201], result: newIssue });
+            if (categoryID != null && await this.IssueService.lookupCategory(categoryID) === null) {
+                next(new HttpException(400, 'categoryID does not specify a valid issue category ID'));
+            }
+
+            const newIssue = await this.IssueService.createIssue(subject, updated, name, categoryID);
+
+            res.status(201).json({ status: 201, message: status[201], result: newIssue });
 
         }
         catch (error: any) {
@@ -109,6 +119,22 @@ class IssueController implements Controller {
         try {
 
             const { id, statusID, subject, updated, name, categoryID } = req.body;
+
+            if (id != null && this.IssueService.getById(id) === null) {
+                next(new HttpException(400, 'id does not specify a valid issue ID'));
+            }
+
+            if (statusID != null && await this.IssueService.lookupStatus(statusID) === null) {
+                next(new HttpException(400, 'statusID does not specify a valid issue status ID'));
+            }
+
+            if (name == null) {
+                next(new HttpException(400, 'name should be a string'));
+            }
+
+            if (categoryID != null && await this.IssueService.lookupCategory(categoryID) === null) {
+                next(new HttpException(400, 'categoryID does not specify a valid issue category ID'));
+            }
 
             const result = await this.IssueService.editIssue(id, statusID, subject, updated, name, categoryID);
 
@@ -132,10 +158,14 @@ class IssueController implements Controller {
 
             const { id } = req.body;
 
+            if (id != null && this.IssueService.getById(id) === null) {
+                next(new HttpException(400, 'id does not specify a valid issue ID'));
+            }
+
             const success = await this.IssueService.deleteIssue(id);
 
             if (!success) {
-                res.status(400).json({ message: 'id does not specify a valid issue id' });
+                res.status(400).json({ message: 'issue deletion failed' });
             }
             else {
                 // Status is ok 200 as nothing has been created

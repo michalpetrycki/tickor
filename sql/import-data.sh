@@ -9,6 +9,8 @@ echo importing data will start in $wait_time...
 sleep $wait_time
 
 echo running data init file...
-/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $password -i /tmp/sql/setup.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $password -i /tmp/sql/create_database.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $password -i /tmp/sql/create_test_database.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $password -i /tmp/sql/seed_database.sql
 
 exec "$@"

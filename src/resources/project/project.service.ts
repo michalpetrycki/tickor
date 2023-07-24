@@ -1,4 +1,5 @@
 import ProjectModel from '@/resources/project/project.model';
+import adze from 'adze';
 
 class ProjectService {
 
@@ -12,7 +13,7 @@ class ProjectService {
         try {
 
             const newProject = await this.projectModel.create({ id, name, active, clientID, logo });
-            console.log('INFO - new project successfully created');
+            adze().info('INFO - new project successfully created');
             return newProject;
 
         }
@@ -35,7 +36,7 @@ class ProjectService {
                     logo: logo ?? projectToEdit.getDataValue('logo')
                 });
                 await projectToEdit.save();
-                console.log(`INFO - project edited successfully`);
+                adze().info(`INFO - project edited successfully`);
             }
             catch (error: any) {
                 throw new Error('ERROR - during updating the project. Reason => ' + error.message);
@@ -56,7 +57,7 @@ class ProjectService {
             if (!!projectToDelete) {
                 projectToDelete.destroy();
                 success = true;
-                console.log(`INFO - project with id {${id}} successfully deleted`);
+                adze().info(`INFO - project with id {${id}} successfully deleted`);
             }
 
             return success;
@@ -72,7 +73,7 @@ class ProjectService {
 
         try { 
             const projects = await this.projectModel.findAll();
-            console.log('INFO - projects successfully fetched');
+            adze().info('INFO - projects successfully fetched');
             return projects;
 
         }
@@ -207,22 +208,22 @@ class ProjectService {
     //                         throw hash_response;
     //                     }
     //                     else {
-    //                         console.info(hash_response);
+    //                         adze().info(hash_response);
     //                     }
 
     //                 }
     //                 catch (error) {
-    //                     console.log('ERROR - Error during registration of admin password hash => ' + error);
+    //                     adze().info('ERROR - Error during registration of admin password hash => ' + error);
     //                 }
 
     //             }
     //             else {
-    //                 console.log('INFO - admin password hash already set');
+    //                 adze().info('INFO - admin password hash already set');
     //             }
 
     //         }
     //         catch (error) {
-    //             console.log('ERROR - Error during fetching admin password hash => ' + error);
+    //             adze().info('ERROR - Error during fetching admin password hash => ' + error);
     //         }
 
     //         try {
@@ -243,27 +244,27 @@ class ProjectService {
     //                         throw salt_response;
     //                     }
     //                     else {
-    //                         console.info(salt_response);
+    //                         adze().info(salt_response);
     //                     }
 
     //                 }
     //                 catch (error) {
-    //                     console.log('ERROR - Error during registration of admin password salt => ' + error);
+    //                     adze().info('ERROR - Error during registration of admin password salt => ' + error);
     //                 }
 
     //             }
     //             else {
-    //                 console.log('INFO - admin password salt already set');
+    //                 adze().info('INFO - admin password salt already set');
     //             }
 
     //         }
     //         catch (error) {
-    //             console.log('ERROR - Error during fetching admin password salt => ' + error);
+    //             adze().info('ERROR - Error during fetching admin password salt => ' + error);
     //         }
 
     //     }
     //     else {
-    //         console.error('ERROR - Admin account not found');
+    //         adze().error('ERROR - Admin account not found');
     //     }
 
     // }
@@ -290,7 +291,7 @@ class ProjectService {
 
     //     }
     //     catch (error) {
-    //         console.log('ERROR - Error during generating hash => ' + error);
+    //         adze().info('ERROR - Error during generating hash => ' + error);
     //     }
     //     finally {
     //         return passwordBits;

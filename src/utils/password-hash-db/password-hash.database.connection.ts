@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
 import { passwordHashDbName, passwordHashDbConfig } from '../config/config.json';
+import adze from 'adze';
 
 const dialect = 'mssql';
 const host = passwordHashDbConfig.server;
@@ -9,14 +10,14 @@ const { port } = passwordHashDbConfig.options;
 
 const passwordHashConnection = new Sequelize(passwordHashDbName, username, password, { host, dialect, port });
 
-console.info('SETUP - Connecting password hash database');
+adze().info('SETUP - Connecting password hash database');
 
 passwordHashConnection?.authenticate()
     .then(() => {
-        console.info('INFO - password hash database connected')
+        adze().info('INFO - password hash database connected')
     })
     .catch((err) => {
-        console.error('ERROR - Unable to connect to the password hash database', err);
+        adze().error('ERROR - Unable to connect to the password hash database', err);
     });
 
 export default passwordHashConnection;

@@ -7,6 +7,7 @@ import * as argon2 from 'argon2';
 import PasswordHash from '@/resources/password-hash/password-hash.interface';
 import PasswordSalt from '@/resources/password-salt/password-salt.interface';
 import CompanyModel from '@/resources/company/company.model';
+import adze from 'adze';
 
 class CompanyService {
 
@@ -23,7 +24,7 @@ class CompanyService {
         try {
 
             const newCompany = await this.companyModel.create({ id, name, kind });
-            console.log('INFO - new company successfully created')
+            adze().info('INFO - new company successfully created')
             return newCompany;
 
         }
@@ -45,7 +46,7 @@ class CompanyService {
                     kind: kind ?? companyToEdit.getDataValue('kind')
                 });
                 await companyToEdit.save();
-                console.log(`INFO - company edited successfully`);
+                adze().info(`INFO - company edited successfully`);
             }
             catch (error: any) {
                 throw new Error('ERROR - during updating the company. Reason => ' + error.message);
@@ -66,7 +67,7 @@ class CompanyService {
             if (!!companyToDelete) {
                 companyToDelete.destroy();
                 success = true;
-                console.log(`INFO - company with id {${id}} successfully deleted`);
+                adze().info(`INFO - company with id {${id}} successfully deleted`);
             }
 
             return success;
@@ -203,22 +204,22 @@ class CompanyService {
     //                         throw hash_response;
     //                     }
     //                     else {
-    //                         console.info(hash_response);
+    //                         adze().info(hash_response);
     //                     }
 
     //                 }
     //                 catch (error) {
-    //                     console.log('ERROR - Error during registration of admin password hash => ' + error);
+    //                     adze().info('ERROR - Error during registration of admin password hash => ' + error);
     //                 }
 
     //             }
     //             else {
-    //                 console.log('INFO - admin password hash already set');
+    //                 adze().info('INFO - admin password hash already set');
     //             }
 
     //         }
     //         catch (error) {
-    //             console.log('ERROR - Error during fetching admin password hash => ' + error);
+    //             adze().info('ERROR - Error during fetching admin password hash => ' + error);
     //         }
 
     //         try {
@@ -239,27 +240,27 @@ class CompanyService {
     //                         throw salt_response;
     //                     }
     //                     else {
-    //                         console.info(salt_response);
+    //                         adze().info(salt_response);
     //                     }
 
     //                 }
     //                 catch (error) {
-    //                     console.log('ERROR - Error during registration of admin password salt => ' + error);
+    //                     adze().info('ERROR - Error during registration of admin password salt => ' + error);
     //                 }
 
     //             }
     //             else {
-    //                 console.log('INFO - admin password salt already set');
+    //                 adze().info('INFO - admin password salt already set');
     //             }
 
     //         }
     //         catch (error) {
-    //             console.log('ERROR - Error during fetching admin password salt => ' + error);
+    //             adze().info('ERROR - Error during fetching admin password salt => ' + error);
     //         }
 
     //     }
     //     else {
-    //         console.error('ERROR - Admin account not found');
+    //         adze().error('ERROR - Admin account not found');
     //     }
 
     // }
@@ -286,7 +287,7 @@ class CompanyService {
 
     //     }
     //     catch (error) {
-    //         console.log('ERROR - Error during generating hash => ' + error);
+    //         adze().info('ERROR - Error during generating hash => ' + error);
     //     }
     //     finally {
     //         return passwordBits;

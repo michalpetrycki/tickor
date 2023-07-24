@@ -13,7 +13,7 @@
           "${workspaceFolder}/**",
           "!**/node_modules/**"
         ],
-        "preLaunchTask": "cos tam build",
+        "preLaunchTask": "clean after debug",
         "trace": true
       }
     ]

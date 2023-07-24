@@ -1,6 +1,7 @@
 import IssueStatusModel from '@/resources/issue-status/issue-status.model';
 import Issue from '@/resources/issue/issue.model';
 import IssueModel from '@/resources/issue/issue.model';
+import adze from 'adze';
 
 class IssueStatusService {
 
@@ -125,7 +126,7 @@ class IssueStatusService {
         try {
 
             const newIssue = await this.issueStatusModel.create({ id, statusID, subject, updated, name, categoryID });
-            console.log('INFO - new issue successfully created');
+            adze().info('INFO - new issue successfully created');
             return newIssue;
 
         }
@@ -163,7 +164,7 @@ class IssueStatusService {
             if (!!issueToDelete) {
                 issueToDelete.destroy();
                 success = true;
-                console.log(`INFO - issue with id {${id}} successfully deleted`);
+                adze().info(`INFO - issue with id {${id}} successfully deleted`);
             }
 
             return success;

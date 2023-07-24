@@ -15,7 +15,7 @@ IssueModel.init({
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-            negative: { msg: 'statusID must not be negative' }
+            min: { args: [0], msg: 'statusID must not be negative' }
         }
     },
     subject: {
@@ -43,7 +43,7 @@ IssueModel.init({
         type: DataTypes.INTEGER,
         allowNull: true,
         validate: {
-            negative: { msg: 'categoryID cannot be negative' }
+            min: { args: [0], msg: 'categoryID must not be negative' }
         }
     },
 }, {

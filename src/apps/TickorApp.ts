@@ -9,6 +9,7 @@ import jwtStrategy from '../utils/config/passport';
 import Controller from '@/utils/interfaces/Controller.interface';
 import ErrorMiddleware from '@/middleware/error.middleware';
 import PersonService from '@/resources/person/person.service';
+import adze from 'adze';
 
 class TickorApp {
 
@@ -86,7 +87,7 @@ class TickorApp {
     public listen(): void {
 
         this.express.listen(this.port, () => {
-            console.log(`App listening on port ${this.port}`);
+            adze().info(`App listening on port ${this.port}`);
         });
 
     }

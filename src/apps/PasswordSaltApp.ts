@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import jwtStrategy from '../utils/config/passport';
 import Controller from '@/utils/interfaces/Controller.interface';
 import ErrorMiddleware from '@/middleware/error.middleware';
+import adze from 'adze';
 
 class PasswordSaltApp {
 
@@ -70,7 +71,7 @@ class PasswordSaltApp {
     public listen(): void {
 
         this.express.listen(this.port, () => {
-            console.log(`Password Salt App listening on port ${this.port}`);
+            adze().info(`Password Salt App listening on port ${this.port}`);
         });
 
     }

@@ -8,6 +8,7 @@ import PasswordHash from '@/resources/password-hash/password-hash.interface';
 import PasswordSalt from '@/resources/password-salt/password-salt.interface';
 import CompanyModel from '@/resources/company/company.model';
 import ClientModel from '@/resources/client/client.model';
+import adze from 'adze';
 
 class ClientService {
 
@@ -24,7 +25,7 @@ class ClientService {
         try {
 
             const newClient = await this.clientModel.create({ id, name, kind });
-            console.log('INFO - new client successfully created');
+            adze().info('INFO - new client successfully created');
             return newClient;
 
         }
@@ -46,7 +47,7 @@ class ClientService {
                     kind: kind ?? clientToEdit.getDataValue('kind')
                 });
                 await clientToEdit.save();
-                console.log(`INFO - client edited successfully`);
+                adze().info(`INFO - client edited successfully`);
             }
             catch (error: any) {
                 throw new Error('ERROR - during updating the client. Reason => ' + error.message);
@@ -67,7 +68,7 @@ class ClientService {
             if (!!clientToDelete) {
                 clientToDelete.destroy();
                 success = true;
-                console.log(`INFO - client with id {${id}} successfully deleted`);
+                adze().info(`INFO - client with id {${id}} successfully deleted`);
             }
 
             return success;
@@ -83,7 +84,7 @@ class ClientService {
 
         try { 
             const clients = await this.clientModel.findAll();
-            console.log('INFO - clients successfully fetched');
+            adze().info('INFO - clients successfully fetched');
             return clients;
 
         }
@@ -218,22 +219,22 @@ class ClientService {
     //                         throw hash_response;
     //                     }
     //                     else {
-    //                         console.info(hash_response);
+    //                         adze().info(hash_response);
     //                     }
 
     //                 }
     //                 catch (error) {
-    //                     console.log('ERROR - Error during registration of admin password hash => ' + error);
+    //                     adze().info('ERROR - Error during registration of admin password hash => ' + error);
     //                 }
 
     //             }
     //             else {
-    //                 console.log('INFO - admin password hash already set');
+    //                 adze().info('INFO - admin password hash already set');
     //             }
 
     //         }
     //         catch (error) {
-    //             console.log('ERROR - Error during fetching admin password hash => ' + error);
+    //             adze().info('ERROR - Error during fetching admin password hash => ' + error);
     //         }
 
     //         try {
@@ -254,27 +255,27 @@ class ClientService {
     //                         throw salt_response;
     //                     }
     //                     else {
-    //                         console.info(salt_response);
+    //                         adze().info(salt_response);
     //                     }
 
     //                 }
     //                 catch (error) {
-    //                     console.log('ERROR - Error during registration of admin password salt => ' + error);
+    //                     adze().info('ERROR - Error during registration of admin password salt => ' + error);
     //                 }
 
     //             }
     //             else {
-    //                 console.log('INFO - admin password salt already set');
+    //                 adze().info('INFO - admin password salt already set');
     //             }
 
     //         }
     //         catch (error) {
-    //             console.log('ERROR - Error during fetching admin password salt => ' + error);
+    //             adze().info('ERROR - Error during fetching admin password salt => ' + error);
     //         }
 
     //     }
     //     else {
-    //         console.error('ERROR - Admin account not found');
+    //         adze().error('ERROR - Admin account not found');
     //     }
 
     // }
@@ -301,7 +302,7 @@ class ClientService {
 
     //     }
     //     catch (error) {
-    //         console.log('ERROR - Error during generating hash => ' + error);
+    //         adze().info('ERROR - Error during generating hash => ' + error);
     //     }
     //     finally {
     //         return passwordBits;

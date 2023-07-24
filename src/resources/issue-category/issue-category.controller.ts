@@ -77,11 +77,15 @@ class IssueCategoryController implements Controller {
 
         try {
 
-            // const { statusID, subject, updated, name, categoryID } = req.body;
+            const { name } = req.body;
 
-            // const newIssue = await this.IssueCategoryService.createIssue(statusID, subject, updated, name, categoryID);
+            if (name == null) {
+                next(new HttpException(400, 'name should be a string'));
+            }
 
-            // res.status(201).json({ status: 201, message: status[201], result: newIssue });
+            const newIssueCategory = await this.IssueCategoryService.createIssueCategory(name);
+
+            res.status(201).json({ status: 201, message: status[201], result: newIssueCategory });
 
         }
         catch (error: any) {
@@ -94,12 +98,12 @@ class IssueCategoryController implements Controller {
 
         try {
 
-            const { id, statusID, subject, updated, name, categoryID } = req.body;
+            const { id, name } = req.body;
 
-            const result = await this.IssueCategoryService.editIssue(id, statusID, subject, updated, name, categoryID);
+            const result = await this.IssueCategoryService.editIssueCategory(id, name);
 
             if (!result) {
-                res.status(400).json({ message: 'id does not specify a valid issue id' });
+                res.status(400).json({ message: 'id does not specify a valid issue category id' });
             }
             else {
                 res.status(200).json({ result });
@@ -118,10 +122,10 @@ class IssueCategoryController implements Controller {
 
             const { id } = req.body;
 
-            const success = await this.IssueCategoryService.deleteIssue(id);
+            const success = await this.IssueCategoryService.deleteIssueCategory(id);
 
             if (!success) {
-                res.status(400).json({ message: 'id does not specify a valid issue id' });
+                res.status(400).json({ message: 'id does not specify a valid issue category id' });
             }
             else {
                 // Status is ok 200 as nothing has been created

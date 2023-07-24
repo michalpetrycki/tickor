@@ -9,7 +9,7 @@
         "detail": "NODE_ENV=development tsc -p ."
       },
       {
-        "label": "cos tam build",
+        "label": "clean after debug",
         "type": "shell",
         "command": "echo clean app after debug",
         "dependsOrder": "sequence",

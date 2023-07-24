@@ -6,6 +6,7 @@ import fetch from 'cross-fetch';
 import * as argon2 from 'argon2';
 import PasswordHash from '@/resources/password-hash/password-hash.interface';
 import PasswordSalt from '@/resources/password-salt/password-salt.interface';
+import adze from 'adze';
 
 class PersonService {
 
@@ -28,14 +29,14 @@ class PersonService {
                 throw hashResponse;
             }
             else {
-                console.info(hashResponse);
+                adze().info(hashResponse);
             }
 
             if (saltResponse instanceof Error) {
                 throw saltResponse;
             }
             else {
-                console.info(saltResponse);
+                adze().info(saltResponse);
             }
 
             const accessToken = token.createToken(person);
@@ -152,7 +153,7 @@ class PersonService {
         try {
 
             const newProject = await this.personModel.create({ id, username, email, kind });
-            console.log('INFO - new person successfully created');
+            adze().info('INFO - new person successfully created');
             return newProject;
 
         }
@@ -188,7 +189,7 @@ class PersonService {
             if (!!personToDelete) {
                 personToDelete.destroy();
                 success = true;
-                console.log(`INFO - person with id {${id}} successfully deleted`);
+                adze().info(`INFO - person with id {${id}} successfully deleted`);
             }
 
             return success;
@@ -229,22 +230,22 @@ class PersonService {
                             throw hash_response;
                         }
                         else {
-                            console.info(hash_response);
+                            adze().info(hash_response);
                         }
 
                     }
                     catch (error) {
-                        console.log('ERROR - Error during registration of admin password hash => ' + error);
+                        adze().info('ERROR - Error during registration of admin password hash => ' + error);
                     }
 
                 }
                 else {
-                    console.log('INFO - admin password hash already set');
+                    adze().info('INFO - admin password hash already set');
                 }
 
             }
             catch (error) {
-                console.log('ERROR - Error during fetching admin password hash => ' + error);
+                adze().info('ERROR - Error during fetching admin password hash => ' + error);
             }
 
             try {
@@ -265,27 +266,27 @@ class PersonService {
                             throw salt_response;
                         }
                         else {
-                            console.info(salt_response);
+                            adze().info(salt_response);
                         }
 
                     }
                     catch (error) {
-                        console.log('ERROR - Error during registration of admin password salt => ' + error);
+                        adze().info('ERROR - Error during registration of admin password salt => ' + error);
                     }
 
                 }
                 else {
-                    console.log('INFO - admin password salt already set');
+                    adze().info('INFO - admin password salt already set');
                 }
 
             }
             catch (error) {
-                console.log('ERROR - Error during fetching admin password salt => ' + error);
+                adze().info('ERROR - Error during fetching admin password salt => ' + error);
             }
 
         }
         else {
-            console.error('ERROR - Admin account not found');
+            adze().error('ERROR - Admin account not found');
         }
 
     }
@@ -312,7 +313,7 @@ class PersonService {
 
         }
         catch (error) {
-            console.log('ERROR - Error during generating hash => ' + error);
+            adze().info('ERROR - Error during generating hash => ' + error);
         }
         finally {
             return passwordBits;
