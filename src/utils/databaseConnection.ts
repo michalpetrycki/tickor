@@ -26,4 +26,8 @@ connection.authenticate()
         adze().error('ERROR - Unable to connect to the database', err);
     });
 
-export default connection!;
+let dropDatabase = async () => {
+    return await connection.drop({});
+};
+
+export { dropDatabase, connection };

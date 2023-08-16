@@ -1,17 +1,17 @@
 import PasswordHashModel from '@/resources/password-hash/password-hash.model';
 
 class PasswordHashService {
-    
+
     private passwordHashModel = PasswordHashModel;
 
-    public async registerPasswordHashForUsername(id: number, username: string, password_hash: string): Promise<Error | PasswordHashModel>{
-        
+    public async registerPasswordHashForUsername(id: number, username: string, password_hash: string): Promise<Error | PasswordHashModel> {
+
         try {
 
             const person = await this.passwordHashModel.create({ id, username, password_hash });
             return person;
 
-        } 
+        }
         catch (error: any) {
             throw new Error(`Unable to create password hash.\ Error: ${error.message}`);
         }
@@ -22,9 +22,9 @@ class PasswordHashService {
 
         try {
 
-            const user_hash = await this.passwordHashModel.findOne({ where: { username }});
+            const user_hash = await this.passwordHashModel.findOne({ where: { username } });
 
-            if (!user_hash){
+            if (!user_hash) {
                 throw new Error('Unable to find password hash for given username');
             }
             else {
@@ -42,9 +42,9 @@ class PasswordHashService {
 
         try {
 
-            const passwordHash = await this.passwordHashModel.findOne({ where: { username }});
+            const passwordHash = await this.passwordHashModel.findOne({ where: { username } });
 
-            if (!passwordHash){
+            if (!passwordHash) {
                 throw new Error('Unable to find password hash for given username');
             }
             else {
@@ -66,16 +66,18 @@ class PasswordHashService {
 
         try {
 
-            const passwordHash = await this.passwordHashModel.findOne({ where: { username }});
-            
-            if (!passwordHash){
+            const passwordHash = await this.passwordHashModel.findOne({ where: { username } });
+
+            if (!passwordHash) {
                 throw new Error('Unable to find password hash for given username');
             }
             else {
 
-                passwordHash?.destroy();
-                return true;
-                
+                await passwordHash?.destroy();
+                return new Promise((resolve) => {
+                    resolve(true);
+                });
+
             }
 
         }

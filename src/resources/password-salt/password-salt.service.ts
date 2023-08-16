@@ -73,8 +73,10 @@ class PasswordSaltService {
             }
             else {
 
-                passwordSalt?.destroy();
-                return true;
+                await passwordSalt?.destroy();
+                return new Promise((resolve) => { 
+                    resolve(true);
+                });
                 
             }
 

@@ -1,10 +1,12 @@
 import Joi from 'joi';
 
 const create = Joi.object({
+    
     name: Joi.string().optional().max(40).messages({
         'string.max': 'subject exceeds allowed number of characters',
         'string.base': 'subject should be a string'
     })
+
 });
 
 const edit = {

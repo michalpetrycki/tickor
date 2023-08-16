@@ -65,12 +65,14 @@ class CompanyService {
             const companyToDelete = await this.getById(id);
 
             if (!!companyToDelete) {
-                companyToDelete.destroy();
+                await companyToDelete.destroy();
                 success = true;
                 adze().info(`INFO - company with id {${id}} successfully deleted`);
             }
 
-            return success;
+            return new Promise((resolve) => {
+                resolve(success);
+            });
 
         }
         catch (error) {

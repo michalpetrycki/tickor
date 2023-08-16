@@ -3,12 +3,12 @@ import adze from 'adze';
 
 class IssueCategoryService {
 
-    private issueCategoryModel = IssueCategoryModel;
-
-    public async getIssueCategories(): Promise<Error | IssueCategoryModel[]> {
+    public async listIssueCategories(): Promise<Error | IssueCategoryModel[]> {
 
         try {
-            return IssueCategoryModel.findAll({});
+            const clients = await IssueCategoryModel.findAll();
+            adze().info('INFO - listClients - success');
+            return clients;
         }
         catch (error) {
             throw new Error('Unable to get issue categories');
@@ -17,14 +17,14 @@ class IssueCategoryService {
     }
 
     public async getById(id: number): Promise<IssueCategoryModel | null> {
-        return await this.issueCategoryModel.findByPk(id);
+        return await IssueCategoryModel.findByPk(id);
     }
 
     public async getByName(name: string): Promise<IssueCategoryModel | Error> {
 
         try {
 
-            const issue = await this.issueCategoryModel.findOne({ where: { name } });
+            const issue = await IssueCategoryModel.findOne({ where: { name } });
 
             if (!issue) {
                 throw new Error(`Unable to find issue category with name ${name}.`);
@@ -44,10 +44,11 @@ class IssueCategoryService {
         try {
 
             adze().info('CATEGORY ISSUE SERVICE - create issue category');
-            const newIssueCategory = await this.issueCategoryModel.create({ name });
+            const newIssueCategory = await IssueCategoryModel.create({ name });
             adze().info('INFO - new issue category successfully created');
-            adze().info('new category id: ', newIssueCategory.getDataValue('id'));
-            return newIssueCategory;
+            return new Promise((resolve) => {
+                resolve(newIssueCategory);
+            });
 
         }
         catch (error) {
@@ -76,12 +77,14 @@ class IssueCategoryService {
             const issueCategoryToDelete = await this.getById(id);
 
             if (!!issueCategoryToDelete) {
-                issueCategoryToDelete.destroy();
+                await issueCategoryToDelete.destroy();
                 success = true;
                 adze().info(`INFO - issue category with id {${id}} successfully deleted`);
             }
 
-            return success;
+            return new Promise((resolve) => {
+                resolve(success);
+            });
 
         }
         catch (error) {

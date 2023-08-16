@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import connection from '@/utils/databaseConnection';
+import { connection } from '@/utils/databaseConnection';
 
 const sequelize = connection;
 

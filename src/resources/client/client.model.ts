@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import connection from '@/utils/databaseConnection';
+import { connection } from '@/utils/databaseConnection';
 
 const sequelize = connection;
 
@@ -19,7 +19,7 @@ ClientModel.init({
     },
     logo: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
 }, {
     sequelize,

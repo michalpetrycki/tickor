@@ -187,12 +187,14 @@ class PersonService {
             const personToDelete = await this.getById(id);
 
             if (!!personToDelete) {
-                personToDelete.destroy();
+                await personToDelete.destroy();
                 success = true;
                 adze().info(`INFO - person with id {${id}} successfully deleted`);
             }
 
-            return success;
+            return new Promise((resolve) => {
+                resolve(success);
+            });
 
         }
         catch (error) {

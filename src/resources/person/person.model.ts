@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import connection from '@/utils/databaseConnection';
+import { connection } from '@/utils/databaseConnection';
 import * as argon2 from 'argon2';
 
 const sequelize = connection;

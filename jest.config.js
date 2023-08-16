@@ -6,5 +6,10 @@ module.exports = {
         "@/utils/(.*)": "<rootDir>/src/utils/$1"
     },
     testPathIgnorePatterns: ['.d.ts', '.js'],
-    setupFiles: ['<rootDir>/jest/setEnvVars.js']
+    setupFiles: ['<rootDir>/jest/setEnvVars.js', '<rootDir>/jest/teardown.js'],
+    // setupFilesAfterEnv: ['<rootDir>/jest/teardown.js'],
+    transform: {
+        '^.+\\.(ts|tsx)?$': 'ts-jest',
+        "^.+\\.(js|jsx)$": "babel-jest",
+    }
 };

@@ -181,7 +181,7 @@ class IssueService {
             if (categoryID) {
                 issue.statusID = categoryID;
             }
-            
+
             const newIssue = await this.issueModel.create(issue);
             adze().info('INFO - new issue successfully created');
             return newIssue;
@@ -218,12 +218,14 @@ class IssueService {
             const issueToDelete = await this.getById(id);
 
             if (!!issueToDelete) {
-                issueToDelete.destroy();
+                await issueToDelete.destroy();
                 success = true;
                 adze().info(`INFO - issue with id {${id}} successfully deleted`);
             }
 
-            return success;
+            return new Promise((resolve) => {
+                resolve(success);
+            });
 
         }
         catch (error) {

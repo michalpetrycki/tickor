@@ -55,12 +55,14 @@ class ProjectService {
             const projectToDelete = await this.getById(id);
 
             if (!!projectToDelete) {
-                projectToDelete.destroy();
+                await projectToDelete.destroy();
                 success = true;
                 adze().info(`INFO - project with id {${id}} successfully deleted`);
             }
 
-            return success;
+            return new Promise((resolve) => {
+                resolve(success);
+            });
 
         }
         catch (error) {
@@ -71,13 +73,13 @@ class ProjectService {
 
     public async listProjects(): Promise<ProjectModel[] | null> {
 
-        try { 
+        try {
             const projects = await this.projectModel.findAll();
             adze().info('INFO - projects successfully fetched');
             return projects;
 
         }
-        catch (error) { 
+        catch (error) {
             throw new Error('ERROR - error during fetchig all projects. Reason => ' + error);
         }
 

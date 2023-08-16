@@ -7,7 +7,7 @@ CREATE TABLE Client (
     id INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
     name NVARCHAR (40) NOT NULL,
     kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('person', 'company')),
-    logo NVARCHAR (480)
+    logo NVARCHAR (480) NULL
 );
 
 CREATE TABLE Person (

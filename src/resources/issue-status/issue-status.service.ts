@@ -162,12 +162,14 @@ class IssueStatusService {
             const issueToDelete = await this.getById(id);
 
             if (!!issueToDelete) {
-                issueToDelete.destroy();
+                await issueToDelete.destroy();
                 success = true;
                 adze().info(`INFO - issue with id {${id}} successfully deleted`);
             }
 
-            return success;
+            return new Promise((resolve) => {
+                resolve(success);
+            });
 
         }
         catch (error) {

@@ -9,6 +9,11 @@
 
 describe('create issue', () => {
 
+    // Give time to any async operation to complete after each test
+afterEach(async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+});
+
     it('should create issue', () => {
 
         expect(1+1).toBe(2);
