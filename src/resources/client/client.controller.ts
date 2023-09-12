@@ -1,17 +1,19 @@
-import Controller from '@/utils/interfaces/Controller.interface';
-import { Router, Request, Response, NextFunction } from 'express';
-import HttpException from '@/utils/exceptions/http.exception';
-import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/company/company.validation';
 import ClientService from '@/resources/client/client.service';
-import status from 'http-status';
+import Controller from '@/utils/interfaces/Controller.interface';
+import { Router, Request, Response, NextFunction } from 'express';
+import validationMiddleware from '@/middleware/validation.middleware';
+import * as mapper from '@/resources/client/client.mapper';
+import { CreateClientDTO, FilterClientDTO, FilterClientPaginatedDTO, UpdateClientDTO } from '@/resources/client/client.dto';
+import { Client } from '@/resources/client/client.interface';
+
 
 // Controller has to be added in index.ts in Controller array in constructor
 class ClientController implements Controller {
 
     public path = '/client';
     public router = Router();
-    private ClientService = new ClientService();
+    private clientService = new ClientService();
 
     constructor() {
         this.initializeRoutes();
@@ -22,19 +24,19 @@ class ClientController implements Controller {
         this.router.post(
             `${this.path}/create`,
             [validationMiddleware(validate.create)],
-            this.create
+            this.createClient
         );
 
         this.router.post(
-            `${this.path}/edit`,
+            `${this.path}/update`,
             validationMiddleware(validate.edit),
-            this.edit
+            this.updateClient
         );
 
         this.router.delete(
             `${this.path}/delete`,
             validationMiddleware(validate.deleteCompany),
-            this.delete
+            this.deleteClient
         );
 
         this.router.post(
@@ -43,223 +45,64 @@ class ClientController implements Controller {
             this.list
         );
 
-        // this.router.get(
-        //     `${this.path}`,
-        //     authenticated,
-        //     this.getAll)
-        //     ;
-
-        // this.router.post(
-        //     `${this.path}/edit`,
-        //     authenticated,
-        //     this.editPerson
-        // );
+        this.router.post(
+            `${this.path}/listPaginated`,
+            // validationMiddleware(validate.listPagindated),
+            this.listPaginated
+        );
 
     }
 
-    private create = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const { id, name, kind } = req.body;
-
-            const newCompany = await this.ClientService.createClient(id, name, kind);
-
-            // 201 if something is created
-            res.status(201).json({ result: newCompany });
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
-
-    public edit = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const { id, name, kind } = req.body;
-
-            const result = await this.ClientService.editClient(id, name, kind);
-
-            if (!result) {
-                res.status(400).json({ message: 'id does not specify a valid company id' });
-            }
-            else {
-                // Status is ok 200 as nothing has been created
-                res.status(200).json({ result });
-            }
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
-
-    public delete = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const { id } = req.body;
-
-            const success = await this.ClientService.deleteClient(id);
-
-            if (!success) {
-                res.status(400).json({ message: 'id does not specify a valid company id' });
-            }
-            else {
-                // Status is ok 200 as nothing has been created
-                res.status(200).json({ success });
-            }
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
-
-    private list = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const clients = await this.ClientService.listClients();
-
-            if (Array.isArray(clients) && clients.length > 0) {
-
-                // Status is ok 200 as nothing has been created
-                res.json({ status: 200, message: status[200], results: clients });
-
-            }
-            else if (Array.isArray(clients) && clients.length === 0) {
-
-                // Status 204 - No content
-                res.json({ status: 204, message: status[204] });
-
-            }
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
-
-    // private login = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-    //     try {
-
-    //         // const { email, password } = req.body;
-    //         // const token = await this.PersonService.loginWithEmail(email, password);
-
-    //         const { username, password } = req.body;
-    //         const token = await this.PersonService.loginWithUsername(username, password);
-
-    //         // Status is ok 200 as nothing has been created
-    //         res.status(200).json({ token });
-
-    //     }
-    //     catch (error: any) {
-    //         next(new HttpException(400, error.message));
-    //     }
-
-    // };
-
-    // private getPerson = (req: Request, res: Response, next: NextFunction): Response | void => {
-
-    //     if (!req.user) {
-    //         return next(new HttpException(404, 'No logged in user'));
-    //     }
-
-    //     res.status(200).json({ user: req.user });
-
-    // };
-
-    // private getAll = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-    //     try {
-
-    //         const persons = await this.PersonService.getPersons();
-
-    //         if (Array.isArray(persons) && persons.length > 0) {
-
-    //             // Status is ok 200 as nothing has been created
-    //             res.status(200).json({ persons });
-
-    //         }
-    //         else if (Array.isArray(persons) && persons.length === 0) {
-
-    //             // Status 204 - No content
-    //             res.status(204).json()
-
-    //         }
-
-    //     }
-    //     catch (error: any) {
-    //         next(new HttpException(400, error.message));
-    //     }
-
-    // };
-
-    // private editPerson = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-    //     try {
-
-    //         const { id } = req.body;
-    //         const personToEdit = await this.PersonService.getById(id);
-
-    //         if (!personToEdit || personToEdit instanceof Error) {
-
-    //             // Status 204 - No content
-    //             res.status(204).json('id does not specify a valid person');
-
-
-    //         }
-    //         else {
-
-    //             personToEdit.set({
-    //                 username: req.body.username ?? personToEdit.getDataValue('username'),
-    //                 email: req.body.email ?? personToEdit.getDataValue('email'),
-    //                 kind: req.body.kind ?? personToEdit.getDataValue('kind')
-    //             });
-    //             personToEdit.save();
-
-    //             // Status is ok 200 as nothing has been created
-    //             res.status(200).json({ personToEdit });
-
-    //         }
-
-    //     }
-    //     catch (error: any) {
-    //         next(new HttpException(400, error.message));
-    //     }
-
-    // };
-
-    // private getWszystko = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-    //     try {
-
-    //         const wszystko = await this.PersonService.getWszystko();
-
-    //         if (Array.isArray(wszystko) && wszystko.length > 0) {
-    //             const responseStatus = 200;
-    //             res.status(responseStatus).json({ status: responseStatus, message: status[responseStatus], results: wszystko });
-    //         }
-    //         else {
-    //             const responseStatus = 204;
-    //             res.status(responseStatus).json({ status: responseStatus, message: status[responseStatus]});
-    //         }
-
-
-    //     }
-    //     catch (error: any) { 
-    //         next(new HttpException(400, error.message));
-    //     }
-
-    // };
+    private createClient = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const payload: CreateClientDTO = req.body;
+        const result = await this.create(payload);
+        return res.status(200).json({ result });
+    }
+
+    private updateClient = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const { id } = req.body;
+        const payload: UpdateClientDTO = req.body;
+        const result = await this.update(id, payload);
+        return res.status(201).json({ result });
+    }
+
+    private deleteClient = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const { id } = req.body;
+        const result = await this.delete(id);
+        return res.status(204).json({ success: result });
+    }
+
+    private list = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const filters: FilterClientDTO = req.body;
+        const results = await this.getAll(filters);
+        return res.status(200).json({ results });
+    }
+
+    private listPaginated = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const filters: FilterClientPaginatedDTO = req.body;
+        const results = await this.getPaginated(filters);
+        return res.status(200).json({ results });
+    }
+
+    private create = async (payload: CreateClientDTO): Promise<Client> => {
+        return mapper.toClient(await this.clientService.createClient(payload));
+    }
+
+    private update = async (id: number, payload: UpdateClientDTO): Promise<Client> => {
+        return mapper.toClient(await this.clientService.updateClient(id, payload))
+    }
+
+    private delete = async (id: number): Promise<boolean> => {
+        return await this.clientService.deleteClient(id);
+    }
+
+    private getAll = async (filters: FilterClientDTO): Promise<Client[]> => {
+        return (await this.clientService.listClients(filters)).map(mapper.toClient);
+    }
+
+    private getPaginated = async (filters: FilterClientPaginatedDTO): Promise<Client[]> => {
+        return (await this.clientService.listPaginated(filters)).map(mapper.toClient);
+    }
 
 }
 

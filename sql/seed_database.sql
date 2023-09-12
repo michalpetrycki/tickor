@@ -1,3 +1,6 @@
+USE Tickor;
+GO
+
 INSERT INTO Person (email, username, kind) 
     VALUES ('admin@tickor.com', 'administrator', 'administrator');
 INSERT INTO Person (email, username, kind) 

@@ -3,10 +3,55 @@ import IssueModel from '@/resources/issue/issue.model';
 import IssueCategory from '@/resources/issue-category/issue-category.model';
 import IssueStatus from '@/resources/issue-status/issue-status.model';
 import adze from 'adze';
+import { CreateOptions, WhereOptions } from 'sequelize';
 
 class IssueService {
 
     private issueModel = IssueModel;
+
+    public async getById(id: number): Promise<IssueModel | null> {
+        return this.issueModel.findByPk(id);
+    }
+
+    public async getByStatusID(statusID: number): Promise<IssueModel[] | null> {
+        return this.issueModel.findAll({
+            where: {
+                statusID
+            }
+        });
+    }
+
+    public async getByCategoryID(categoryID: number): Promise<IssueModel[] | null> {
+        return this.issueModel.findAll({
+            where: {
+                categoryID
+            }
+        });
+    }
+
+    public async getBySubject(subject: string): Promise<IssueModel[] | null> {
+        return this.issueModel.findAll({
+            where: {
+                subject
+            }
+        });
+    }
+
+    public async getByUpdated(updated: string): Promise<IssueModel[] | null> {
+        return this.issueModel.findAll({
+            where: {
+                updated
+            }
+        });
+    }
+
+    public async getByName(name: string): Promise<IssueModel[] | null> {
+        return this.issueModel.findAll({
+            where: {
+                name
+            }
+        });
+    }
 
     public async lookupStatus(statusID: number): Promise<IssueStatus | null> {
         return IssueStatus.findByPk(statusID);
@@ -16,30 +61,63 @@ class IssueService {
         return IssueCategory.findByPk(categoryID);
     }
 
-    public async getIssues(filter?: IssueListFilter): Promise<Error | Issue[]> {
+    // public async createIssue(subject: string, updated: string, name: string, categoryID: number): Promise<Error | IssueModel> {
+    //     try {
+
+    //         let issue: CreateOptions<any> = {
+    //             fields: [
+    //                 1
+    //             ]
+    //         };
+
+    //         // if (subject) {
+    //         //     issue.subject = subject;
+    //         // }
+    //         // if (updated) {
+    //         //     issue.updated = updated;
+    //         // }
+    //         // if (name) {
+    //         //     issue.name = name;
+    //         // }
+    //         // if (categoryID) {
+    //         //     issue.categoryID = categoryID;
+    //         // }
+
+    //         const newIssue = await this.issueModel.create(issue);
+    //         adze().info('INFO - new issue successfully created');
+    //         return newIssue;
+
+    //     }
+    //     catch (error) {
+    //         throw new Error('ERROR - error during creation of issue. Reason => ' + error);
+    //     }
+    // }
+
+
+    public async getIssues(filter?: WhereOptions): Promise<Error | Issue[]> {
 
         try {
 
             let whereStatement: any = {};
 
-            if (filter?.id) {
-                whereStatement.id = filter.id;
-            }
-            if (filter?.categoryID) {
-                whereStatement.categoryID = filter.categoryID;
-            }
-            if (filter?.name) {
-                whereStatement.name = filter.name;
-            }
-            if (filter?.statusID) {
-                whereStatement.statusID = filter.statusID;
-            }
-            if (filter?.subject) {
-                whereStatement.subject = filter.subject;
-            }
-            if (filter?.updated) {
-                whereStatement.updated = filter.updated;
-            }
+            // if (filter?.id) {
+            //     whereStatement.id = filter.id;
+            // }
+            // if (filter?.categoryID) {
+            //     whereStatement.categoryID = filter.categoryID;
+            // }
+            // if (filter?.name) {
+            //     whereStatement.name = filter.name;
+            // }
+            // if (filter?.statusID) {
+            //     whereStatement.statusID = filter.statusID;
+            // }
+            // if (filter?.subject) {
+            //     whereStatement.subject = filter.subject;
+            // }
+            // if (filter?.updated) {
+            //     whereStatement.updated = filter.updated;
+            // }
 
             if (whereStatement) {
                 return Issue.findAll({
@@ -57,129 +135,24 @@ class IssueService {
 
     }
 
-    public async getById(id: number): Promise<IssueModel | null> {
-        return await this.issueModel.findByPk(id);
-    }
-
-    public async getByStatusID(statusID: number): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueModel.findOne({ where: { statusID } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with statusID = ${statusID} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given statusID found');
-        }
-
-    }
-
-    public async getBySubject(subject: string): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueModel.findOne({ where: { subject } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with subject = ${subject} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given subject found');
-        }
-
-    }
-
-    public async getByUpdated(updated: string): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueModel.findOne({ where: { updated } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with updated = ${updated} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given updated found');
-        }
-
-    }
-
-    public async getByName(name: string): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueModel.findOne({ where: { name } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with name = ${name} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given name found');
-        }
-
-    }
-
-    public async getByCategoryID(categoryID: number): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueModel.findOne({ where: { categoryID } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with categoryID = ${categoryID} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given categoryID found');
-        }
-
-    }
-
     public async createIssue(subject: string, updated: string, name: string, categoryID: number): Promise<Error | IssueModel> {
         try {
 
             let issue: any = {
-                id: 5,
                 statusID: 1
             };
 
             if (subject) {
-                issue.id = subject;
+                issue.subject = subject;
             }
             if (updated) {
-                issue.categoryID = updated;
+                issue.updated = updated;
             }
             if (name) {
                 issue.name = name;
             }
             if (categoryID) {
-                issue.statusID = categoryID;
+                issue.categoryID = categoryID;
             }
 
             const newIssue = await this.issueModel.create(issue);

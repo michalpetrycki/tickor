@@ -4,12 +4,11 @@
   "description": "A backend for web-app used for ticket management",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc",
     "postinstall": "npm run build",
-    "test:unit": "jest --verbose --detectOpenHandles --runInBand"
+    "test": "vitest --config ./src/vitest.config.ts"
   },
   "author": "Michal P",
   "license": "ISC",
@@ -22,7 +21,6 @@
     "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "fs": "0.0.1-security",
     "helmet": "^6.0.1",
     "http-status": "^1.6.2",
     "joi": "^17.7.0",
@@ -57,7 +55,9 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.34.0"
   },
   "_moduleAliases": {
     "@/resources": "dist/resources",

@@ -6,7 +6,7 @@
         "script": "build",
         "group": "build",
         "label": "npm: build",
-        "detail": "NODE_ENV=development tsc -p ."
+        "detail": "NODE_ENV=development tsc -p .",
       },
       {
         "label": "clean after debug",

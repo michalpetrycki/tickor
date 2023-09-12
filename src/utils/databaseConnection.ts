@@ -11,23 +11,19 @@ let connection: Sequelize;
 
 adze().info('SETUP - Connecting database');
 
-if (!process.env.USE_TEST_DATABASE) {
-    connection = new Sequelize(testDbName, username, password, { host, dialect, port });
-}
-else {
-    connection = new Sequelize(dbName, username, password, { host, dialect, port });
-}
+const databaseName = process.env.USE_TEST_DATABASE === '' ? testDbName : dbName;
+connection = new Sequelize(databaseName, username, password, { host, dialect, port });
 
 connection.authenticate()
     .then(() => {
-        adze().info('INFO - database connected');
+        adze().info('INFO - database connected to ' + connection.getDatabaseName());
     })
     .catch((err) => {
         adze().error('ERROR - Unable to connect to the database', err);
     });
 
 let dropDatabase = async () => {
-    return await connection.drop({});
+    return await connection.sync({ force: true });
 };
 
 export { dropDatabase, connection };

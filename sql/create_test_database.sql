@@ -7,14 +7,18 @@ CREATE TABLE Client (
     id INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
     name NVARCHAR (40) NOT NULL,
     kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('person', 'company')),
-    logo NVARCHAR (480)
+    logo NVARCHAR (480) NULL,
+    createdAt DATETIME2 CONSTRAINT DF_Client_Created DEFAULT (SYSDATETIME()),
+    updatedAt Date NULL
 );
 
 CREATE TABLE Person (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     email NVARCHAR (40) NOT NULL, 
     username NVARCHAR (40) NOT NULL, 
-    kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('administrator', 'robot', 'joe'))
+    kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('administrator', 'robot', 'joe')),
+    createdAt DATETIME2 CONSTRAINT DF_Person_Created DEFAULT (SYSDATETIME()),
+    updatedAt Date NULL
     -- clientID INT NOT NULL FOREIGN KEY REFERENCES Client (id)
 );
 
@@ -23,17 +27,23 @@ CREATE TABLE Project (
     name NVARCHAR (40) NOT NULL,
     active BIT DEFAULT 0,
     logo NVARCHAR (480),
-    clientID INT NOT NULL FOREIGN KEY REFERENCES Client (id)
+    clientID INT NOT NULL FOREIGN KEY REFERENCES Client (id),
+    createdAt Date NULL,
+    updatedAt Date NULL
 );
 
 CREATE TABLE IssueCategory (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    name NVARCHAR (40) NOT NULL
+    name NVARCHAR (40) NOT NULL,
+    createdAt Date NULL,
+    updatedAt Date NULL
 );
 
 CREATE TABLE IssueStatus (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    name NVARCHAR (40) NOT NULL
+    name NVARCHAR (40) NOT NULL,
+    createdAt Date NULL,
+    updatedAt Date NULL
 );
 
 CREATE TABLE Issue (
@@ -42,11 +52,15 @@ CREATE TABLE Issue (
     subject NVARCHAR (200),
     updated NVARCHAR (19),
     name NVARCHAR (40) NOT NULL,
-    categoryID INT FOREIGN KEY REFERENCES IssueCategory (id)
+    categoryID INT FOREIGN KEY REFERENCES IssueCategory (id),
+    createdAt Date NULL,
+    updatedAt Date NULL
 );
 
 CREATE TABLE Company (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (120) NOT NULL,
-    kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('company', 'contractor', 'customer'))
+    kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('company', 'contractor', 'customer')),
+    createdAt Date NULL,
+    updatedAt Date NULL
 );

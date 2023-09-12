@@ -1,11 +1,19 @@
-import IssueStatusModel from '@/resources/issue-status/issue-status.model';
+import adze from 'adze';
 import Issue from '@/resources/issue/issue.model';
 import IssueModel from '@/resources/issue/issue.model';
-import adze from 'adze';
+import IssueStatusModel from '@/resources/issue-status/issue-status.model';
 
 class IssueStatusService {
 
     private issueStatusModel = IssueStatusModel;
+
+    public async getById(id: number): Promise<IssueModel | null> {
+        return await this.issueStatusModel.findByPk(id);
+    }
+
+    public async getByName(name: string): Promise<IssueStatusModel | null> {
+        return await this.issueStatusModel.findOne({ where: { name }});
+    }
 
     public async getIssues(): Promise<Error | Issue[]> {
 
@@ -18,109 +26,7 @@ class IssueStatusService {
 
     }
 
-    public async getById(id: number): Promise<IssueModel | null> {
-        return await this.issueStatusModel.findByPk(id);
-    }
-
-    public async getByStatusID(statusID: number): Promise<Error | IssueStatusModel> {
-
-        try {
-
-            const issue = await this.issueStatusModel.findOne({ where: { statusID } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with statusID = ${statusID} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given statusID found');
-        }
-
-    }
-
-    public async getBySubject(subject: string): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueStatusModel.findOne({ where: { subject } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with subject = ${subject} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given subject found');
-        }
-
-    }
-
-    public async getByUpdated(updated: string): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueStatusModel.findOne({ where: { updated } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with updated = ${updated} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given updated found');
-        }
-
-    }
-
-    public async getByName(name: string): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueStatusModel.findOne({ where: { name } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with name = ${name} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given name found');
-        }
-
-    }
-
-    public async getByCategoryID(categoryID: number): Promise<Error | IssueModel> {
-
-        try {
-
-            const issue = await this.issueStatusModel.findOne({ where: { categoryID } });
-
-            if (!issue) {
-                throw new Error(`Unable to find issue with categoryID = ${categoryID} `);
-            }
-            else {
-                return issue;
-            }
-
-        }
-        catch (error) {
-            throw new Error('ERROR - no issue with given categoryID found');
-        }
-
-    }
+    
 
     public async createIssue(id: number, statusID: number, subject: string, updated: string, name: string, categoryID: number): Promise<Error | IssueModel> {
         try {
