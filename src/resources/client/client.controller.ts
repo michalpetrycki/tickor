@@ -1,12 +1,11 @@
+import * as mapper from '@/resources/client/client.mapper';
+import { Client } from '@/resources/client/client.interface';
 import validate from '@/resources/company/company.validation';
 import ClientService from '@/resources/client/client.service';
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 import validationMiddleware from '@/middleware/validation.middleware';
-import * as mapper from '@/resources/client/client.mapper';
 import { CreateClientDTO, FilterClientDTO, FilterClientPaginatedDTO, UpdateClientDTO } from '@/resources/client/client.dto';
-import { Client } from '@/resources/client/client.interface';
-
 
 // Controller has to be added in index.ts in Controller array in constructor
 class ClientController implements Controller {

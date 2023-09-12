@@ -1,11 +1,9 @@
 import { GetAllClientsFilters, GetClientsPaginatedFilters } from '@/resources/client/client.filter';
-import ClientModel, { ClientInput, ClientOutput } from '@/resources/client/client.model';
+import { ClientInput, ClientOutput } from '@/resources/client/client.model';
 import * as clientDal from '@/resources/client/client.dal';
 import Client from '@/resources/client/client.model';
 
 class ClientService {
-
-    private clientModel = ClientModel;
 
     public async getById(id: number): Promise<Client> {
         return clientDal.getById(id);

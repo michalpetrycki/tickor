@@ -1,11 +1,38 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import { connection } from '@/utils/databaseConnection';
 
-const sequelize = connection;
+interface ProjectAttributes {
+    id: number;
+    name: string;
+    active: boolean;
+    clientID: number;
+    logo: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
-class ProjectModel extends Model { }
+export interface ProjectInput extends Optional<ProjectAttributes, 'id'> { };
+export interface ProjectOutput extends Required<ProjectAttributes> { };
 
-ProjectModel.init({
+class Project extends Model<ProjectAttributes, ProjectInput> implements ProjectAttributes {
+    public id!: number;
+    public name!: string;
+    public active!: boolean;
+    public clientID!: number;
+    public logo!: string;
+
+    // timestamps
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+}
+
+Project.init({
+    id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false
@@ -23,10 +50,10 @@ ProjectModel.init({
         allowNull: false
     }
 }, {
-    sequelize,
+    sequelize: connection,
+    timestamps: true,
     freezeTableName: true,
-    modelName: 'Project',
-    timestamps: false
+    modelName: 'Project'
 });
 
-export default ProjectModel;
+export default Project;
