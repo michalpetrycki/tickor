@@ -13,11 +13,11 @@ class ProjectService {
         return projectDal.getByName(name);
     }
 
-    public async getByActive(active: boolean): Promise<Project[] | null> {
+    public async getByActive(active: boolean): Promise<Project[]> {
         return projectDal.getByActive(active);
     }
 
-    public async getByClientID(clientID: number): Promise<Project[] | null> {
+    public async getByClientID(clientID: number): Promise<Project[]> {
         return projectDal.getByClientID(clientID);
     }
 

@@ -1,11 +1,26 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import { connection } from '@/utils/databaseConnection';
 
-const sequelize = connection;
+interface IssueStatusAttributes {
+    id: number;
+    name: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
-class IssueStatusModel extends Model { }
+export interface IssueStatusInput extends Optional<IssueStatusAttributes, 'id'> { };
+export interface IssueStatusOutput extends Required<IssueStatusAttributes> { };
 
-IssueStatusModel.init({
+class IssueStatus extends Model<IssueStatusAttributes, IssueStatusInput> implements IssueStatusAttributes {
+    public id!: number;
+    public name!: string;
+    
+    // timestamps
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+}
+
+IssueStatus.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -19,13 +34,13 @@ IssueStatusModel.init({
         }
     }
 }, {
-    sequelize,
+    sequelize: connection,
+    timestamps: true,
     freezeTableName: true,
-    modelName: 'IssueStatus',
-    timestamps: false
+    modelName: 'IssueStatus'    
 });
 
 // IssueModel.hasOne(CategoryModel, { foreignKey: 'idCategory', foreignKeyConstraint: true });
 // IssueModel.hasOne(IssueStatus, { foreignKey: 'idStatus', foreignKeyConstraint: true });
 
-export default IssueStatusModel;
+export default IssueStatus;

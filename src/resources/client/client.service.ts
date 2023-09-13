@@ -13,7 +13,7 @@ class ClientService {
         return clientDal.getByName(name);
     }
 
-    public async getByKind(kind: string): Promise<Client[] | null> {
+    public async getByKind(kind: string): Promise<Client[]> {
         return clientDal.getByKind(kind);
     }
 

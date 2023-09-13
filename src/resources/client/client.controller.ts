@@ -5,7 +5,7 @@ import ClientService from '@/resources/client/client.service';
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 import validationMiddleware from '@/middleware/validation.middleware';
-import { CreateClientDTO, FilterClientDTO, FilterClientPaginatedDTO, UpdateClientDTO } from '@/resources/client/client.dto';
+import { CreateClientDTO, FilterClientsDTO, FilterClientsPaginatedDTO, UpdateClientDTO } from '@/resources/client/client.dto';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class ClientController implements Controller {
@@ -72,13 +72,13 @@ class ClientController implements Controller {
     }
 
     private list = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterClientDTO = req.body;
+        const filters: FilterClientsDTO = req.body;
         const results = await this.getAll(filters);
         return res.status(200).json({ results });
     }
 
     private listPaginated = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterClientPaginatedDTO = req.body;
+        const filters: FilterClientsPaginatedDTO = req.body;
         const results = await this.getPaginated(filters);
         return res.status(200).json({ results });
     }
@@ -95,11 +95,11 @@ class ClientController implements Controller {
         return await this.clientService.deleteClient(id);
     }
 
-    private getAll = async (filters: FilterClientDTO): Promise<Client[]> => {
+    private getAll = async (filters: FilterClientsDTO): Promise<Client[]> => {
         return (await this.clientService.listClients(filters)).map(mapper.toClient);
     }
 
-    private getPaginated = async (filters: FilterClientPaginatedDTO): Promise<Client[]> => {
+    private getPaginated = async (filters: FilterClientsPaginatedDTO): Promise<Client[]> => {
         return (await this.clientService.listPaginated(filters)).map(mapper.toClient);
     }
 

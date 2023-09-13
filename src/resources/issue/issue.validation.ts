@@ -10,10 +10,6 @@ const create = Joi.object({
         'string.max': 'subject exceeds allowed number of characters (200)',
         'string.base': 'subject should be a string'
     }),
-    updated: Joi.string().optional().max(19).messages({
-        'string.base': 'updated should be a string',
-        'string.max': 'updated exceeds allowed number of characters (19)'
-    }),
     name: Joi.string().max(400).messages({
         'string.max': 'name exceeds allowed number of characters',
         'string.base': 'name should be a string'

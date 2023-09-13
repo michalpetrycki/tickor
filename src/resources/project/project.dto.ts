@@ -10,11 +10,11 @@ export type CreateProjectDTO = {
 
 export type UpdateProjectDTO = Optional<CreateProjectDTO, 'name' | 'active' | 'clientID' | 'logo'>
 
-export type FilterProjectDTO = {
+export type FilterProjectsDTO = {
     name?: string;
     active?: boolean;
     clientID?: number;
     logo?: string;
 }
 
-export type FilterProjectPaginatedDTO = FilterProjectDTO & PaginationFiltersDTO;
+export type FilterProjectsPaginatedDTO = FilterProjectsDTO & PaginationFiltersDTO;

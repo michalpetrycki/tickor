@@ -9,10 +9,10 @@ export type CreateClientDTO = {
 
 export type UpdateClientDTO = Optional<CreateClientDTO, 'name' | 'kind' | 'logo'>
 
-export type FilterClientDTO = {
+export type FilterClientsDTO = {
     name?: string;
     kind?: string;
     logo?: string;
 }
 
-export type FilterClientPaginatedDTO = FilterClientDTO & PaginationFiltersDTO;
+export type FilterClientsPaginatedDTO = FilterClientsDTO & PaginationFiltersDTO;

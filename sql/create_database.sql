@@ -35,14 +35,14 @@ CREATE TABLE Project (
 CREATE TABLE IssueCategory (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (40) NOT NULL,
-    createdAt Date NULL,
+    createdAt DATETIME2 CONSTRAINT DF_Issue_Category_CreatedAt DEFAULT (SYSDATETIME()),
     updatedAt Date NULL
 );
 
 CREATE TABLE IssueStatus (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     name NVARCHAR (40) NOT NULL,
-    createdAt Date NULL,
+    createdAt DATETIME2 CONSTRAINT DF_Issue_Status_CreatedAt DEFAULT (SYSDATETIME()),
     updatedAt Date NULL
 );
 
@@ -50,10 +50,9 @@ CREATE TABLE Issue (
     id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
     statusID INT FOREIGN KEY REFERENCES IssueStatus (id),
     subject NVARCHAR (200),
-    updated NVARCHAR (19),
     name NVARCHAR (40) NOT NULL,
     categoryID INT FOREIGN KEY REFERENCES IssueCategory (id),
-    createdAt Date NULL,
+    createdAt DATETIME2 CONSTRAINT DF_Issue_CreatedAt DEFAULT (SYSDATETIME()),
     updatedAt Date NULL
 );
 

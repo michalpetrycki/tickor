@@ -5,7 +5,7 @@ import ProjectService from '@/resources/project/project.service';
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 import validationMiddleware from '@/middleware/validation.middleware';
-import { CreateProjectDTO, FilterProjectDTO, FilterProjectPaginatedDTO, UpdateProjectDTO } from '@/resources/project/project.dto';
+import { CreateProjectDTO, FilterProjectsDTO, FilterProjectsPaginatedDTO, UpdateProjectDTO } from '@/resources/project/project.dto';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class ProjectController implements Controller {
@@ -72,13 +72,13 @@ class ProjectController implements Controller {
     }
 
     private list = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterProjectDTO = req.body;
+        const filters: FilterProjectsDTO = req.body;
         const results = await this.getAll(filters);
         return res.status(200).json({ results });
     }
 
     private listPaginated = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterProjectPaginatedDTO = req.body;
+        const filters: FilterProjectsPaginatedDTO = req.body;
         const results = await this.getPaginated(filters);
         return res.status(200).json({ results });
     }
@@ -95,11 +95,11 @@ class ProjectController implements Controller {
         return await this.projectService.deleteProject(id);
     }
 
-    private getAll = async (filters: FilterProjectDTO): Promise<Project[]> => {
+    private getAll = async (filters: FilterProjectsDTO): Promise<Project[]> => {
         return (await this.projectService.listProjects(filters)).map(mapper.toProject);
     }
 
-    private getPaginated = async (filters: FilterProjectPaginatedDTO): Promise<Project[]> => {
+    private getPaginated = async (filters: FilterProjectsPaginatedDTO): Promise<Project[]> => {
         return (await this.projectService.listPaginated(filters)).map(mapper.toProject);
     }
 
