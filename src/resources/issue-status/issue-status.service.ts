@@ -1,87 +1,35 @@
-import adze from 'adze';
-import Issue from '@/resources/issue/issue.model';
-import IssueModel from '@/resources/issue/issue.model';
-import IssueStatusModel from '@/resources/issue-status/issue-status.model';
+import * as issueStatusDal from '@/resources/issue-status/issue-status.dal';
+import { GetAllClientsFilters, GetClientsPaginatedFilters } from "@/resources/client/client.filter";
+import IssueStatus, { IssueStatusInput, IssueStatusOutput } from "@/resources/issue-status/issue-status.model";
 
 class IssueStatusService {
 
-    private issueStatusModel = IssueStatusModel;
-
-    public async getById(id: number): Promise<IssueModel | null> {
-        return await this.issueStatusModel.findByPk(id);
+    public async getById(id: number): Promise<IssueStatus> {
+        return issueStatusDal.getById(id);
     }
 
-    public async getByName(name: string): Promise<IssueStatusModel | null> {
-        return await this.issueStatusModel.findOne({ where: { name }});
+    public async getByName(name: string): Promise<IssueStatus[]> {
+        return issueStatusDal.getByName(name);
     }
 
-    public async getIssues(): Promise<Error | Issue[]> {
-
-        try {
-            return Issue.findAll({});
-        }
-        catch (error) {
-            throw new Error('Unable to get issues');
-        }
-
+    public async createIssueStatus(payload: IssueStatusInput): Promise<IssueStatusOutput> {
+        return issueStatusDal.createIssueStatus(payload);
     }
 
-    
-
-    public async createIssue(id: number, statusID: number, subject: string, updated: string, name: string, categoryID: number): Promise<Error | IssueModel> {
-        try {
-
-            const newIssue = await this.issueStatusModel.create({ id, statusID, subject, updated, name, categoryID });
-            adze().info('INFO - new issue successfully created');
-            return newIssue;
-
-        }
-        catch (error) {
-            throw new Error('ERROR - error during creation of issue. Reason => ' + error);
-        }
-
+    public async updateIssueStatus(id: number, editProperties: Partial<IssueStatusInput>): Promise<IssueStatusOutput> {
+        return issueStatusDal.updateIssueStatus(id, editProperties);
     }
 
-    public async editIssue(id: number, statusID: number, subject: string, updated: string, name: string, categoryID: number): Promise<IssueModel | null> {
-
-        const issueToEdit = await this.getById(id);
-
-        if (!!issueToEdit) {
-            issueToEdit.set({
-                statusID: statusID ?? issueToEdit.getDataValue('statusID'),
-                subject: subject ?? issueToEdit.getDataValue('subject'),
-                updated: subject ?? issueToEdit.getDataValue('updated'),
-                name: name ?? issueToEdit.getDataValue('name'),
-                categoryID: categoryID ?? issueToEdit.getDataValue('categoryID')
-            });
-            issueToEdit.save();
-        }
-
-        return issueToEdit;
-
+    public async deleteIssueStatus(id: number): Promise<boolean> {
+        return issueStatusDal.deleteIssueStatus(id);
     }
 
-    public async deleteIssue(id: number): Promise<boolean> {
-        try {
+    public async listIssueStatuses(filters?: GetAllClientsFilters): Promise<IssueStatusOutput[]> {
+        return issueStatusDal.listIssueStatuses(filters);
+    }
 
-            let success = false;
-            const issueToDelete = await this.getById(id);
-
-            if (!!issueToDelete) {
-                await issueToDelete.destroy();
-                success = true;
-                adze().info(`INFO - issue with id {${id}} successfully deleted`);
-            }
-
-            return new Promise((resolve) => {
-                resolve(success);
-            });
-
-        }
-        catch (error) {
-            throw new Error('ERROR - error during deleting issue. Reason => ' + error);
-        }
-
+    public async listPaginated(filters?: GetClientsPaginatedFilters): Promise<IssueStatusOutput[]> {
+        return issueStatusDal.listPaginated(filters);
     }
 
 }

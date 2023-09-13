@@ -1,18 +1,16 @@
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
-import HttpException from '@/utils/exceptions/http.exception';
-import validationMiddleware from '@/middleware/validation.middleware';
-import validate from '@/resources/issue-category/issue-category.validation';
-import authenticated from '@/middleware//authenticated.middleware';
-import status from 'http-status';
+import * as mapper from '@/resources/issue-category/issue-category.mapper';
 import IssueCategoryService from '@/resources/issue-category/issue-category.service';
+import { IssueCategory } from '@/resources/issue-category/issue-category.interface';
+import { CreateIssueCategoryDTO, FilterIssueCategoriesDTO, FilterIssueCategoriesPaginatedDTO, UpdateIssueCategoryDTO } from '@/resources/issue-category/issue-category.dto';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class IssueCategoryController implements Controller {
 
     public path = '/issue-category';
     public router = Router();
-    private IssueCategoryService = new IssueCategoryService();
+    private issueCategoryService = new IssueCategoryService();
 
     constructor() {
         this.initializeRoutes();
@@ -21,123 +19,87 @@ class IssueCategoryController implements Controller {
     private initializeRoutes(): void {
 
         this.router.post(
-            `${this.path}/listIssueCategories`,
-            // authenticated,
-            this.list
-        );
-
-        this.router.post(
             `${this.path}/create`,
-            [validationMiddleware(validate.create)],
-            this.create
+            // [validationMiddleware(validate.create)],
+            this.createIssueCategory
         );
 
         this.router.post(
-            `${this.path}/edit`,
-            authenticated,
-            this.edit
+            `${this.path}/update`,
+            // validationMiddleware(validate.edit),
+            this.updateIssueCategory
         );
 
         this.router.delete(
             `${this.path}/delete`,
-            [validationMiddleware(validate.deleteIssue), authenticated],
+            // validationMiddleware(validate.deleteCompany),
             this.delete
+        );
+
+        this.router.post(
+            `${this.path}/list`,
+            // validationMiddleware(validate.list),
+            this.list
+        );
+
+        this.router.post(
+            `${this.path}/listPaginated`,
+            // validationMiddleware(validate.listPagindated),
+            this.listPaginated
         );
 
     }
 
-    private list = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    private createIssueCategory = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const payload: CreateIssueCategoryDTO = req.body;
+        const result = await this.create(payload);
+        return res.status(200).json({ result });
+    }
 
-        try {
+    private updateIssueCategory = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const { id } = req.body;
+        const payload: UpdateIssueCategoryDTO = req.body;
+        const result = await this.update(id, payload);
+        return res.status(201).json({ result });
+    }
 
-            // const { id } = req.body;
-            // const issues = await this.IssueCategoryService.getIssues(id);
+    private deleteIssueCategory = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const { id } = req.body;
+        const result = await this.delete(id);
+        return res.status(204).json({ success: result });
+    }
 
-            // if ((typeof issues === 'object' && issues !== null) || (Array.isArray(issues) && issues.length > 0)) {
+    private list = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const filters: FilterIssueCategoriesDTO = req.body;
+        const results = await this.getAll(filters);
+        return res.status(200).json({ results });
+    }
 
-            //     // Status is ok 200 as nothing has been created
-            //     res.json({ status: 200, message: status[200], results: issues });
+    private listPaginated = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+        const filters: FilterIssueCategoriesPaginatedDTO = req.body;
+        const results = await this.getPaginated(filters);
+        return res.status(200).json({ results });
+    }
 
-            // }
-            // else if (Array.isArray(issues) && issues.length === 0) {
+    private create = async (payload: CreateIssueCategoryDTO): Promise<IssueCategory> => {
+        return mapper.toIssueCategory(await this.issueCategoryService.createIssueCategory(payload));
+    }
 
-            //     // Status 204 - No content
-            //     res.json({ status: 204, message: status[204] });
+    private update = async (id: number, payload: UpdateIssueCategoryDTO): Promise<IssueCategory> => {
+        return mapper.toIssueCategory(await this.issueCategoryService.updateIssueCategory(id, payload))
+    }
 
-            // }
+    private delete = async (id: number): Promise<boolean> => {
+        return await this.issueCategoryService.deleteIssueCategory(id);
+    }
 
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
+    private getAll = async (filters: FilterIssueCategoriesDTO): Promise<IssueCategory[]> => {
+        return (await this.issueCategoryService.listIssueCategories(filters)).map(mapper.toIssueCategory);
+    }
 
-    };
-
-    private create = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const { name } = req.body;
-
-            if (name == null) {
-                next(new HttpException(400, 'name should be a string'));
-            }
-
-            const newIssueCategory = await this.IssueCategoryService.createIssueCategory(name);
-
-            res.status(201).json({ status: 201, message: status[201], result: newIssueCategory });
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
-
-    private edit = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const { id, name } = req.body;
-
-            const result = await this.IssueCategoryService.editIssueCategory(id, name);
-
-            if (!result) {
-                res.status(400).json({ message: 'id does not specify a valid issue category id' });
-            }
-            else {
-                res.status(200).json({ result });
-            }
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
-
-    private delete = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-
-        try {
-
-            const { id } = req.body;
-
-            const success = await this.IssueCategoryService.deleteIssueCategory(id);
-
-            if (!success) {
-                res.status(400).json({ message: 'id does not specify a valid issue category id' });
-            }
-            else {
-                // Status is ok 200 as nothing has been created
-                res.status(200).json({ success });
-            }
-
-        }
-        catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-
-    };
+    private getPaginated = async (filters: FilterIssueCategoriesPaginatedDTO): Promise<IssueCategory[]> => {
+        return (await this.issueCategoryService.listPaginated(filters)).map(mapper.toIssueCategory);
+    }
 
 }
 
