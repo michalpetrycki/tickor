@@ -14,7 +14,6 @@ const PasswordSaltApp_1 = __importDefault(require("./apps/PasswordSaltApp"));
 const issue_controller_1 = __importDefault(require("@/resources/issue/issue.controller"));
 const client_controller_1 = __importDefault(require("@/resources/client/client.controller"));
 const person_controller_1 = __importDefault(require("@/resources/person/person.controller"));
-const company_controller_1 = __importDefault(require("@/resources/company/company.controller"));
 const project_controller_1 = __importDefault(require("@/resources/project/project.controller"));
 const health_check_controller_1 = __importDefault(require("@/resources/health-check/health-check.controller"));
 const issue_status_controller_1 = __importDefault(require("@/resources/issue-status/issue-status.controller"));
@@ -27,7 +26,6 @@ const tickorApp = new TickorApp_1.default([
     new issue_controller_1.default(),
     new person_controller_1.default(),
     new client_controller_1.default(),
-    new company_controller_1.default(),
     new project_controller_1.default(),
     new health_check_controller_1.default(),
     new issue_status_controller_1.default(),

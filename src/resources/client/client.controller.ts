@@ -1,6 +1,6 @@
 import * as mapper from '@/resources/client/client.mapper';
 import { Client } from '@/resources/client/client.interface';
-import validate from '@/resources/company/company.validation';
+import validate from '@/resources/client/client.validation';
 import ClientService from '@/resources/client/client.service';
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
@@ -28,13 +28,13 @@ class ClientController implements Controller {
 
         this.router.post(
             `${this.path}/update`,
-            validationMiddleware(validate.edit),
+            // validationMiddleware(validate.edit),
             this.updateClient
         );
 
         this.router.delete(
             `${this.path}/delete`,
-            validationMiddleware(validate.deleteCompany),
+            // validationMiddleware(validate.deleteCompany),
             this.deleteClient
         );
 

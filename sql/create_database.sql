@@ -55,11 +55,3 @@ CREATE TABLE Issue (
     createdAt DATETIME2 CONSTRAINT DF_Issue_CreatedAt DEFAULT (SYSDATETIME()),
     updatedAt Date NULL
 );
-
-CREATE TABLE Company (
-    id INT NOT NULL PRIMARY KEY IDENTITY (1, 1),
-    name NVARCHAR (120) NOT NULL,
-    kind NVARCHAR (40) NOT NULL CHECK ( kind IN ('company', 'contractor', 'customer')),
-    createdAt Date NULL,
-    updatedAt Date NULL
-);

@@ -11,7 +11,6 @@ import PasswordSaltApp from './apps/PasswordSaltApp';
 import IssueController from '@/resources/issue/issue.controller';
 import ClientController from '@/resources/client/client.controller';
 import PersonController from '@/resources/person/person.controller';
-import CompanyController from '@/resources/company/company.controller';
 import ProjectController from '@/resources/project/project.controller';
 import HealthCheckController from '@/resources/health-check/health-check.controller';
 import IssueStatusController from '@/resources/issue-status/issue-status.controller';
@@ -26,7 +25,6 @@ const tickorApp = new TickorApp([
     new IssueController(),
     new PersonController(),
     new ClientController(),
-    new CompanyController(),
     new ProjectController(),
     new HealthCheckController(),
     new IssueStatusController(),
