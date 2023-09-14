@@ -41,7 +41,7 @@ services:
       dockerfile: ./docker/Dockerfile
     container_name: web-app
     networks: 
-      - tocker_network
+      - tickor_network
     ports:
       - 3000:3000
     volumes:
@@ -51,11 +51,11 @@ services:
   #   depends_on:
   #     - db-server
   #   tty: true
-# networks:
-#   tocker_network:
-#     name: tocker_network
-#     driver: bridge
-#     ipam:
-#       driver: default
-#       config:
-#         - subnet: 192.168.69.0/24
+networks:
+  tickor_network:
+    name: tickor_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.69.0/24
