@@ -36,11 +36,11 @@ services:
       - ./../sql:/tmp/sql
     command: /bin/bash /tmp/sql/password-salt-entrypoint.sh
   web-app:
-    build: 
+    build:
       context: ../
       dockerfile: ./docker/Dockerfile
     container_name: web-app
-    networks: 
+    networks:
       - tickor_network
     ports:
       - 3000:3000

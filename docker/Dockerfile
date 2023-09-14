@@ -1,8 +1,12 @@
 FROM node:14-alpine
 
-WORKDIR /opt/project
+WORKDIR /usr/src/app
 
-COPY ../* /opt/project/
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
 
 # RUN npm i -g pm2 && npm install && npm run build && pm2 start dist/index.js
 
