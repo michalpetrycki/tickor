@@ -2,6 +2,8 @@ services:
   db-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: db-server
+    networks:
+      - tickor_network
     ports:
       - "1433:1433"
     environment:
@@ -14,6 +16,8 @@ services:
   password-hash-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: password-hash-server
+    networks:
+      - tickor_network
     ports:
       - "1444:1433"
     environment:
@@ -26,6 +30,8 @@ services:
   password-salt-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: password-salt-server
+    networks:
+      - tickor_network
     ports:
       - "1455:1433"
     environment:
