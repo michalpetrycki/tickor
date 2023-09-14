@@ -17,8 +17,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: password-hash-server
     networks:
-      tickor_network:
-        ipv4_address: 192.168.96.5
+      - tickor_network
     ports:
       - "1444:1433"
     environment:
@@ -55,9 +54,6 @@ services:
       - ./..:/opt/project
       - /opt/project/docker
       - ./data/app:/tmp/tocker_local_storage
-  #   depends_on:
-  #     - db-server
-  #   tty: true
 networks:
   tickor_network:
     driver: bridge
