@@ -10,12 +10,14 @@ const passwordSaltConnection = new Sequelize(passwordSaltDbName, username, passw
 
 adze().info('SETUP - Connecting password salt database');
 
-passwordSaltConnection?.authenticate()
-    .then(() => {
-        adze().info('INFO - password salt database connected')
-    })
-    .catch((err) => {
-        adze().error('ERROR - Unable to connect to the password salt database', err);
-    });
+setTimeout(() => {
+    passwordSaltConnection?.authenticate()
+        .then(() => {
+            adze().info('INFO - password salt database connected')
+        })
+        .catch((err) => {
+            adze().error('ERROR - Unable to connect to the password salt database', err);
+        });
+}, 100000);
 
 export default passwordSaltConnection;

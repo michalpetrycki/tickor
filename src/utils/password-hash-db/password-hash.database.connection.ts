@@ -12,12 +12,14 @@ const passwordHashConnection = new Sequelize(passwordHashDbName, username, passw
 
 adze().info('SETUP - Connecting password hash database');
 
-passwordHashConnection?.authenticate()
-    .then(() => {
-        adze().info('INFO - password hash database connected')
-    })
-    .catch((err) => {
-        adze().error('ERROR - Unable to connect to the password hash database', err);
-    });
+setTimeout(() => {
+    passwordHashConnection?.authenticate()
+        .then(() => {
+            adze().info('INFO - password hash database connected')
+        })
+        .catch((err) => {
+            adze().error('ERROR - Unable to connect to the password hash database', err);
+        });
+}, 100000);
 
 export default passwordHashConnection;
