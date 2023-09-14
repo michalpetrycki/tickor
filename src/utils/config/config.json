@@ -4,7 +4,7 @@
     "passwordHashDbName": "TickorHash",
     "passwordSaltDbName": "TickorSalt",
     "dbConfig": {
-        "server": "127.0.0.1",
+        "server": "http://127.0.0.1",
         "__server": "localhost",
         "options": {
             "port": 1433,
@@ -19,7 +19,7 @@
         }
     },
     "passwordHashDbConfig": {
-        "server": "127.0.0.1",
+        "server": "http://127.0.0.1",
         "__server": "localhost",
         "options": {
             "port": 1444,
@@ -34,7 +34,7 @@
         }
     },
     "passwordSaltDbConfig": {
-        "server": "127.0.0.1",
+        "server": "http://127.0.0.1",
         "__server": "localhost",
         "options": {
             "port": 1455,
