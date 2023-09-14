@@ -17,7 +17,8 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: password-hash-server
     networks:
-      - tickor_network
+      tickor_network:
+        ipv4_address: 192.168.96.5
     ports:
       - "1444:1433"
     environment:
