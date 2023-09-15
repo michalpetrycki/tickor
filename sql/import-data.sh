@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-wait_time=60s 
+wait_time=20s 
 password=costam@711
 
 # wait for SQL Server to come up

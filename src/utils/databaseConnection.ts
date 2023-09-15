@@ -22,7 +22,7 @@ setTimeout(() => {
         .catch((err) => {
             adze().error('ERROR - Unable to connect to the database', err);
         });
-}, 100000);
+}, 120000);
 
 let dropDatabase = async () => {
     return await connection.sync({ force: true });

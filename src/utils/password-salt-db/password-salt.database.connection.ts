@@ -18,6 +18,6 @@ setTimeout(() => {
         .catch((err) => {
             adze().error('ERROR - Unable to connect to the password salt database', err);
         });
-}, 100000);
+}, 120000);
 
 export default passwordSaltConnection;

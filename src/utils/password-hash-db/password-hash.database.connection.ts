@@ -20,6 +20,6 @@ setTimeout(() => {
         .catch((err) => {
             adze().error('ERROR - Unable to connect to the password hash database', err);
         });
-}, 100000);
+}, 120000);
 
 export default passwordHashConnection;
