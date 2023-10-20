@@ -1,14 +1,16 @@
-import express, { Application } from 'express';
-import compression from 'compression';
-import cors from 'cors';
-import helmet from 'helmet';
-import xXssProtection from 'x-xss-protection';
-import passport from 'passport';
-import morgan from 'morgan';
-import jwtStrategy from '../utils/config/passport';
-import Controller from '@/utils/interfaces/Controller.interface';
-import ErrorMiddleware from '@/middleware/error.middleware';
 import adze from 'adze';
+import cors from 'cors';
+import morgan from 'morgan';
+import helmet from 'helmet';
+import passport from 'passport';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import xXssProtection from 'x-xss-protection';
+import express, { Application } from 'express';
+import jwtStrategy from '../utils/config/passport';
+import ErrorMiddleware from '@/middleware/error.middleware';
+import Controller from '@/utils/interfaces/Controller.interface';
+import { rateLimiterMiddleware } from '@/middleware/rate-limiter.middleware';
 
 class PasswordHashApp {
 
@@ -52,6 +54,12 @@ class PasswordHashApp {
 
         // morgan - logging requested endpoint
         this.express.use(morgan('tiny'));
+
+        // Ddos protection
+        this.express.use(rateLimiterMiddleware);
+
+        // set the request size limit to 1 MB
+        this.express.use(bodyParser.json({ limit: '1mb' }));
 
         // if (config.env === 'production') {
         //     this.express.use('/v1/auth', authLimiter);
