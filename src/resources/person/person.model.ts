@@ -57,9 +57,9 @@ PersonModel.init({
     }
 }, {
     sequelize,
+    timestamps: false,
     freezeTableName: true,
-    modelName: 'Person',
-    timestamps: false
+    modelName: 'Person'
 });
 
 export default PersonModel;

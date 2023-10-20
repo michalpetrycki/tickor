@@ -71,10 +71,17 @@ class ProjectController implements Controller {
         return res.status(204).json({ success: result });
     }
 
-    private list = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterProjectsDTO = req.body;
-        const results = await this.getAll(filters);
-        return res.status(200).json({ results });
+    private list = async (req: Request, res: Response, next: NextFunction): Promise<Response | undefined> => {
+
+        try {
+            const filters: FilterProjectsDTO = req.body;
+            const results = await this.getAll(filters);
+            return res.status(200).json({ results });
+        }
+        catch (error: any) {
+            next(error);
+        }
+
     }
 
     private listPaginated = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {

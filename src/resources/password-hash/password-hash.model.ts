@@ -33,9 +33,9 @@ PasswordHashModel.init({
     }
 }, {
     sequelize,
+    timestamps: false,
     freezeTableName: true,
-    modelName: 'UserPasswordHash',
-    timestamps: false
+    modelName: 'UserPasswordHash'
 });
 
 export default PasswordHashModel;

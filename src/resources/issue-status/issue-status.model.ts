@@ -4,8 +4,6 @@ import { connection } from '@/utils/databaseConnection';
 interface IssueStatusAttributes {
     id: number;
     name: string;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
 export interface IssueStatusInput extends Optional<IssueStatusAttributes, 'id'> { };
@@ -14,10 +12,6 @@ export interface IssueStatusOutput extends Required<IssueStatusAttributes> { };
 class IssueStatus extends Model<IssueStatusAttributes, IssueStatusInput> implements IssueStatusAttributes {
     public id!: number;
     public name!: string;
-    
-    // timestamps
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
 }
 
 IssueStatus.init({
@@ -30,14 +24,18 @@ IssueStatus.init({
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            notEmpty: { msg: 'name cannot be an empty string' }
+            notEmpty: { msg: 'name cannot be an empty string' },
+            max: {
+                args: [40],
+                msg: 'name exceeds maximum length (40)'
+            }
         }
     }
 }, {
     sequelize: connection,
-    timestamps: true,
+    timestamps: false,
     freezeTableName: true,
-    modelName: 'IssueStatus'    
+    modelName: 'IssueStatus'
 });
 
 // IssueModel.hasOne(CategoryModel, { foreignKey: 'idCategory', foreignKeyConstraint: true });

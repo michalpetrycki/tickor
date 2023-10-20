@@ -4,7 +4,4 @@ export interface Project {
     active: boolean;
     clientID: number;
     logo: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
 }

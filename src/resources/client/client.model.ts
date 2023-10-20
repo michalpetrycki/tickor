@@ -6,22 +6,16 @@ interface ClientAttributes {
     name: string;
     kind: string;
     logo: string;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
-export interface ClientInput extends Optional<ClientAttributes, 'id'> {};
-export interface ClientOutput extends Required<ClientAttributes> {};
+export interface ClientInput extends Optional<ClientAttributes, 'id'> { };
+export interface ClientOutput extends Required<ClientAttributes> { };
 
 class Client extends Model<ClientAttributes, ClientInput> implements ClientAttributes {
     public id!: number;
     public name!: string;
     public kind!: string;
     public logo!: string;
-
-    // timestamps
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
 }
 
 Client.init({
@@ -48,7 +42,7 @@ Client.init({
     },
 }, {
     sequelize: connection,
-    timestamps: true,
+    timestamps: false,
     freezeTableName: true,
     modelName: 'Client' // oterwise model name in some places is plural, eg. 'Clients'
 });

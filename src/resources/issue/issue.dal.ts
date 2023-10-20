@@ -1,3 +1,5 @@
+import IssueCategory from "@/resources/issue-category/issue-category.model";
+import IssueStatus from "@/resources/issue-status/issue-status.model";
 import { GetAllIssuesFilters, GetIssuesPaginatedFilters } from "@/resources/issue/issue.filter";
 import Issue, { IssueInput, IssueOutput } from "@/resources/issue/issue.model";
 import { Op, Sequelize } from "sequelize";
@@ -52,11 +54,11 @@ export const getById = async (id: number): Promise<Issue> => {
 }
 
 export const getByStatusID = async (statusID: number): Promise<Issue[]> => {
-    
-    const issues = await Issue.findAll({ where: { statusID } });
-    const issue = await Issue.findByPk(statusID);
 
-    if(!issue) {
+    const issues = await Issue.findAll({ where: { statusID } });
+    const status = await IssueStatus.findByPk(statusID);
+
+    if (!status) {
         throw new Error('statusID does not specify a valid status id');
     }
 
@@ -69,11 +71,11 @@ export const getByStatusID = async (statusID: number): Promise<Issue[]> => {
 }
 
 export const getByCategoryID = async (categoryID: number): Promise<Issue[]> => {
-    
-    const issues = await Issue.findAll({ where: { categoryID } });
-    const issue = await Issue.findByPk(categoryID);
 
-    if(!issue) {
+    const issues = await Issue.findAll({ where: { categoryID } });
+    const category = await IssueCategory.findByPk(categoryID);
+
+    if (!category) {
         throw new Error('categoryID does not specify a valid category id');
     }
 

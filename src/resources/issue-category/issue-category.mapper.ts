@@ -4,8 +4,6 @@ import { IssueCategoryOutput } from "@/resources/issue-category/issue-category.m
 export const toIssueCategory = (issueCategory: IssueCategoryOutput): IssueCategory => {
     return {
         id: issueCategory.id,
-        name: issueCategory.name,
-        createdAt: issueCategory.createdAt,
-        updatedAt: issueCategory.updatedAt
+        name: issueCategory.name
     }
 }

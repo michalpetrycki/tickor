@@ -5,8 +5,7 @@ export interface GetAllIssuesFilters {
     subject?: string;
     name?: string;    
     categoryID?: number;
-    createdAt?: string;
-    updatedAt?: string;
+    projectID?: number;
 };
 
 export interface GetIssuesPaginatedFilters extends GetAllIssuesFilters, PaginationFilters { };

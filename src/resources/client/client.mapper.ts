@@ -6,8 +6,6 @@ export const toClient = (client: ClientOutput): Client => {
         id: client.id,
         name: client.name,
         kind: client.kind,
-        logo: client.logo,
-        createdAt: client.createdAt,
-        updatedAt: client.updatedAt
+        logo: client.logo
     }
 }

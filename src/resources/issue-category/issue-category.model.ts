@@ -4,8 +4,6 @@ import { connection } from '@/utils/databaseConnection';
 interface IssueCategoryAttributes {
     id: number;
     name: string;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
 export interface IssueCategoryInput extends Optional<IssueCategoryAttributes, 'id'> { };
@@ -14,12 +12,7 @@ export interface IssueCategoryOutput extends Required<IssueCategoryAttributes> {
 class IssueCategory extends Model<IssueCategoryAttributes, IssueCategoryInput> implements IssueCategoryAttributes {
     public id!: number;
     public name!: string;
-    
-    // timestamps
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
 }
-
 
 IssueCategory.init({
     id: {
@@ -40,7 +33,7 @@ IssueCategory.init({
     }
 }, {
     sequelize: connection,
-    timestamps: true,
+    timestamps: false,
     freezeTableName: true,
     modelName: 'IssueCategory'
 });

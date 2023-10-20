@@ -7,8 +7,7 @@ interface IssueAttributes {
     subject: string;
     name: string;
     categoryID: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+    projectID: number;
 }
 
 export interface IssueInput extends Optional<IssueAttributes, 'id'> { };
@@ -20,10 +19,7 @@ class Issue extends Model<IssueAttributes, IssueInput> implements IssueAttribute
     public subject!: string;
     public name!: string;
     public categoryID!: number;
-
-    // timestamps
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
+    public projectID!: number;
 }
 
 Issue.init({
@@ -60,6 +56,13 @@ Issue.init({
             min: { args: [0], msg: 'categoryID must not be negative' }
         }
     },
+    projectID: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        validate: {
+            min: { args: [0], msg: 'projectID must not be negative' }
+        }
+    }
 }, {
     sequelize: connection,
     timestamps: false,
@@ -69,5 +72,7 @@ Issue.init({
 
 // Issue.hasOne(IssueCategory, { foreignKey: 'idCategory', foreignKeyConstraint: true });
 // Issue.hasOne(IssueStatus, { foreignKey: 'idStatus', foreignKeyConstraint: true });
+// Issue.hasOne(Project, { foreignKey: 'idProject', foreignKeyConstraint: true });
+// Issue.hasMany(Activity)
 
 export default Issue;

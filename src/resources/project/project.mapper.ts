@@ -7,8 +7,6 @@ export const toProject = (project: ProjectOutput): Project => {
         name: project.name,
         active: project.active,
         clientID: project.clientID,
-        logo: project.logo,
-        createdAt: project.createdAt,
-        updatedAt: project.updatedAt
+        logo: project.logo
     }
 }

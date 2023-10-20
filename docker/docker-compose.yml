@@ -41,19 +41,19 @@ services:
       - ./data/password-salt/db:/usr/app/data
       - ./../sql:/tmp/sql
     command: /bin/bash /tmp/sql/password-salt-entrypoint.sh
-  web-app:
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
-    container_name: web-app
-    networks:
-      - tickor_network
-    ports:
-      - 3000:3000
-    volumes:
-      - ./..:/opt/project
-      - /opt/project/docker
-      - ./data/app:/tmp/tocker_local_storage
+  # web-app:
+  #   build:
+  #     context: ../
+  #     dockerfile: ./docker/Dockerfile
+  #   container_name: web-app
+  #   networks:
+  #     - tickor_network
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./..:/opt/project
+  #     - /opt/project/docker
+  #     - ./data/app:/tmp/tocker_local_storage
 networks:
   tickor_network:
     driver: bridge

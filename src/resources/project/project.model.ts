@@ -7,8 +7,6 @@ interface ProjectAttributes {
     active: boolean;
     clientID: number;
     logo: string;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
 export interface ProjectInput extends Optional<ProjectAttributes, 'id'> { };
@@ -20,10 +18,6 @@ class Project extends Model<ProjectAttributes, ProjectInput> implements ProjectA
     public active!: boolean;
     public clientID!: number;
     public logo!: string;
-
-    // timestamps
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
 }
 
 Project.init({
@@ -51,7 +45,7 @@ Project.init({
     }
 }, {
     sequelize: connection,
-    timestamps: true,
+    timestamps: false,
     freezeTableName: true,
     modelName: 'Project'
 });

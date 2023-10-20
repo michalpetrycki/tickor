@@ -4,7 +4,5 @@ export interface Issue {
     name: string;
     subject: string;
     categoryID: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
+    projectID: number;
 }

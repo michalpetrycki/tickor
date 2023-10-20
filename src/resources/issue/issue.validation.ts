@@ -17,6 +17,10 @@ const create = Joi.object({
     categoryID: Joi.number().optional().positive().messages({
         'number.positive': 'categoryID must be a positive number',
         'number.base': 'categoryID should be an integer'
+    }),
+    projectID: Joi.number().optional().positive().messages({
+        'number.positive': 'projectID must be a positive number',
+        'number.base': 'projectID should be an integer'
     })
 
 });

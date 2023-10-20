@@ -17,6 +17,7 @@ import IssueStatusController from '@/resources/issue-status/issue-status.control
 import PasswordHashController from '@/resources/password-hash/password-hash.controller';
 import PasswordSaltController from '@/resources/password-salt/password-salt.controller';
 import IssueCategoryController from '@/resources/issue-category/issue-category.controller';
+import ActivityController from '@/resources/activity/activity.controller';
 
 // validateEnv();
 // dotenv.config();
@@ -26,6 +27,7 @@ const tickorApp = new TickorApp([
     new PersonController(),
     new ClientController(),
     new ProjectController(),
+    new ActivityController(),
     new HealthCheckController(),
     new IssueStatusController(),
     new IssueCategoryController()

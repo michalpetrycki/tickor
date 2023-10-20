@@ -9,7 +9,6 @@ export const toIssue = (issue: IssueOutput): Issue => {
         subject: issue.subject,
         name: issue.name,
         categoryID: issue.categoryID,
-        createdAt: issue.createdAt,
-        updatedAt: issue.updatedAt
+        projectID: issue.projectID
     }
 }

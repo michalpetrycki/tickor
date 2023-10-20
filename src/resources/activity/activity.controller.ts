@@ -1,18 +1,18 @@
-import * as mapper from '@/resources/issue/issue.mapper';
-import validate from '@/resources/issue/issue.validation';
-import { Issue } from '@/resources/issue/issue.interface';
-import IssueService from '@/resources/issue/issue.service';
+import * as mapper from '@/resources/activity/activity.mapper';
+import validate from '@/resources/activity/activity.validation';
 import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
+import { Activity } from '@/resources/activity/activity.interface';
+import ActivityService from '@/resources/activity/activity.service';
 import validationMiddleware from '@/middleware/validation.middleware';
-import { CreateIssueDTO, UpdateIssueDTO, FilterIssuesDTO, FilterIssuesPaginatedDTO } from '@/resources/issue/issue.dto';
+import { CreateActivityDTO, FilterActivitiesDTO, FilterActivitiesPaginatedDTO, UpdateActivityDTO } from '@/resources/activity/activity.dto';
 
 // Controller has to be added in index.ts in Controller array in constructor
-class IssueController implements Controller {
+class ActivityController implements Controller {
 
-    public path = '/issue';
+    public path = '/activity';
     public router = Router();
-    private issueService = new IssueService();
+    private activityService = new ActivityService();
 
     constructor() {
         this.initializeRoutes();
@@ -36,27 +36,27 @@ class IssueController implements Controller {
             `${this.path}/create`,
             [validationMiddleware(validate.create)],
             // [validationMiddleware(validate.create), authenticated],
-            this.createIssue
+            this.createActivity
         );
 
         this.router.post(
             `${this.path}/update`,
             [validationMiddleware(validate.edit)],
             // [validationMiddleware(validate.edit), authenticated],
-            this.updateIssue
+            this.updateActivity
         );
 
         this.router.delete(
             `${this.path}/delete`,
-            // [validationMiddleware(validate.deleteIssue), authenticated],
-            this.deleteIssue
+            // [validationMiddleware(validate.deleteActivity), authenticated],
+            this.deleteActivity
         );
 
     }
 
-    private createIssue = async (req: Request, res: Response, next: NextFunction): Promise<Response | undefined> => {
-        const payload: CreateIssueDTO = req.body;
+    private createActivity = async (req: Request, res: Response, next: NextFunction): Promise<Response | undefined> => {
 
+        const payload: CreateActivityDTO = req.body;
         try {
             const result = await this.create(payload);
             return res.status(200).json({ result });
@@ -67,51 +67,51 @@ class IssueController implements Controller {
 
     }
 
-    private updateIssue = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    private updateActivity = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const { id } = req.body;
-        const payload: UpdateIssueDTO = req.body;
+        const payload: UpdateActivityDTO = req.body;
         const result = await this.update(id, payload);
         return res.status(201).json({ result });
     }
 
-    private deleteIssue = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    private deleteActivity = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
         const { id } = req.body;
         const result = await this.delete(id);
         return res.status(204).json({ success: result });
     }
 
     private list = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterIssuesDTO = req.body;
+        const filters: FilterActivitiesDTO = req.body;
         const results = await this.getAll(filters);
         return res.status(200).json({ results });
     }
 
     private listPaginated = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-        const filters: FilterIssuesPaginatedDTO = req.body;
+        const filters: FilterActivitiesPaginatedDTO = req.body;
         const results = await this.getPaginated(filters);
         return res.status(200).json({ results });
     }
 
-    private create = async (payload: CreateIssueDTO): Promise<Issue> => {
-        return mapper.toIssue(await this.issueService.createIssue(payload));
+    private create = async (payload: CreateActivityDTO): Promise<Activity> => {
+        return mapper.toActivity(await this.activityService.createActivity(payload));
     }
 
-    private update = async (id: number, payload: UpdateIssueDTO): Promise<Issue> => {
-        return mapper.toIssue(await this.issueService.updateIssue(id, payload))
+    private update = async (id: number, payload: UpdateActivityDTO): Promise<Activity> => {
+        return mapper.toActivity(await this.activityService.updateActivity(id, payload))
     }
 
     private delete = async (id: number): Promise<boolean> => {
-        return await this.issueService.deleteIssue(id);
+        return await this.activityService.deleteActivity(id);
     }
 
-    private getAll = async (filters: FilterIssuesDTO): Promise<Issue[]> => {
-        return (await this.issueService.listIssues(filters)).map(mapper.toIssue);
+    private getAll = async (filters: FilterActivitiesDTO): Promise<Activity[]> => {
+        return (await this.activityService.listActivity(filters)).map(mapper.toActivity);
     }
 
-    private getPaginated = async (filters: FilterIssuesPaginatedDTO): Promise<Issue[]> => {
-        return (await this.issueService.listPaginated(filters)).map(mapper.toIssue);
+    private getPaginated = async (filters: FilterActivitiesPaginatedDTO): Promise<Activity[]> => {
+        return (await this.activityService.listPaginated(filters)).map(mapper.toActivity);
     }
 
 }
 
-export default IssueController;
+export default ActivityController;

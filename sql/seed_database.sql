@@ -8,7 +8,7 @@ INSERT INTO Person (email, username, kind)
 INSERT INTO Person (email, username, kind) 
     VALUES ('jon@doe.com', 'jon', 'joe');
 GO
-
+    
 INSERT INTO Client (name, kind, logo) 
     VALUES('Michal P', 'person', 'https://www.shutterstock.com/shutterstock/photos/764354755/display_1500/stock-vector-logo-design-abstract-people-vector-template-illustration-design-of-logotype-business-happy-person-764354755.jpg');
 INSERT INTO Client (name, kind, logo) 
@@ -52,8 +52,8 @@ INSERT INTO IssueStatus (name) VALUES ('hold');
 INSERT INTO IssueStatus (name) VALUES ('closure request');
 GO
 
-INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (2, 'Implement new big feature', '2023-06-23', 'Big boy', 1);
-INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (3, 'There''s a snake in my shoe', '2023-03-23', 'Ssssnake', 2);
-INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (4, 'Modal doesn''t close properly on X click', '2023-04-23', 'Stupid modal', 2);
-INSERT INTO Issue (statusID, subject, updated, name, categoryID) VALUES (5, 'Request for super duper shiny modal', '2023-05-23', 'Shining star', 1);
+INSERT INTO Issue (statusID, subject, name, categoryID, projectID) VALUES (2, 'Implement new big feature', 'Big boy', 1, 1);
+INSERT INTO Issue (statusID, subject, name, categoryID, projectID) VALUES (3, 'There''s a snake in my shoe', 'Ssssnake', 2, 1);
+INSERT INTO Issue (statusID, subject, name, categoryID, projectID) VALUES (4, 'Modal doesn''t close properly on X click', 'Stupid modal', 2, 2);
+INSERT INTO Issue (statusID, subject, name, categoryID, projectID) VALUES (5, 'Request for super duper shiny modal', 'Shining star', 1, 3);
 GO

@@ -6,15 +6,17 @@ export type CreateIssueDTO = {
     subject: string;
     name: string;
     categoryID: number;
+    projectID: number;
 }
 
-export type UpdateIssueDTO = Optional<CreateIssueDTO, 'statusID' | 'subject' | 'name' | 'categoryID'>
+export type UpdateIssueDTO = Optional<CreateIssueDTO, 'statusID' | 'subject' | 'name' | 'categoryID' | 'projectID'>
 
 export type FilterIssuesDTO = {
     statusID?: number;
     subject?: string;
     name?: string;
     categoryID?: number;
+    projectID?: number;
 }
 
 export type FilterIssuesPaginatedDTO = FilterIssuesDTO & PaginationFiltersDTO;

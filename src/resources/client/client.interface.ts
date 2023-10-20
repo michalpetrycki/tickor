@@ -3,7 +3,4 @@ export interface Client {
     name: string;
     kind: string;
     logo: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
 }

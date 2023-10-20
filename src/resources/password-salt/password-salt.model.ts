@@ -33,9 +33,9 @@ PasswordSaltModel.init({
     }
 }, {
     sequelize,
+    timestamps: false,
     freezeTableName: true,
-    modelName: 'UserPasswordSalt',
-    timestamps: false
+    modelName: 'UserPasswordSalt'
 });
 
 export default PasswordSaltModel;
