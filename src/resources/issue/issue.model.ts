@@ -1,5 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import { connection } from '@/utils/databaseConnection';
+import Activity from '@/resources/activity/activity.model';
 
 interface IssueAttributes {
     id: number;
@@ -8,10 +9,11 @@ interface IssueAttributes {
     name: string;
     categoryID: number;
     projectID: number;
+    Activities?: any;
 }
 
 export interface IssueInput extends Optional<IssueAttributes, 'id'> { };
-export interface IssueOutput extends Required<IssueAttributes> { };
+export interface IssueOutput extends Optional<IssueAttributes, 'Activities'> { };
 
 class Issue extends Model<IssueAttributes, IssueInput> implements IssueAttributes {
     public id!: number;
@@ -20,6 +22,7 @@ class Issue extends Model<IssueAttributes, IssueInput> implements IssueAttribute
     public name!: string;
     public categoryID!: number;
     public projectID!: number;
+    public Activities?: any;
 }
 
 Issue.init({
@@ -73,6 +76,7 @@ Issue.init({
 // Issue.hasOne(IssueCategory, { foreignKey: 'idCategory', foreignKeyConstraint: true });
 // Issue.hasOne(IssueStatus, { foreignKey: 'idStatus', foreignKeyConstraint: true });
 // Issue.hasOne(Project, { foreignKey: 'idProject', foreignKeyConstraint: true });
-// Issue.hasMany(Activity)
+// Issue.hasMany(Activity, { foreignKey: 'issue_idActivity', foreignKeyConstraint: true });
+Issue.hasMany(Activity);
 
 export default Issue;

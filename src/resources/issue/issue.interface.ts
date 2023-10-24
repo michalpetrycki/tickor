@@ -1,3 +1,5 @@
+import { Activity } from "@/resources/activity/activity.interface";
+
 export interface Issue {
     id: number;
     statusID: number;
@@ -5,4 +7,5 @@ export interface Issue {
     subject: string;
     categoryID: number;
     projectID: number;
+    activity?: Activity;
 }

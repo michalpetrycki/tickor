@@ -6,6 +6,7 @@ import Controller from '@/utils/interfaces/Controller.interface';
 import { Router, Request, Response, NextFunction } from 'express';
 import validationMiddleware from '@/middleware/validation.middleware';
 import { CreateIssueDTO, UpdateIssueDTO, FilterIssuesDTO, FilterIssuesPaginatedDTO } from '@/resources/issue/issue.dto';
+import { IssueOutput } from '@/resources/issue/issue.model';
 
 // Controller has to be added in index.ts in Controller array in constructor
 class IssueController implements Controller {
@@ -104,8 +105,8 @@ class IssueController implements Controller {
         return await this.issueService.deleteIssue(id);
     }
 
-    private getAll = async (filters: FilterIssuesDTO): Promise<Issue[]> => {
-        return (await this.issueService.listIssues(filters)).map(mapper.toIssue);
+    private getAll = async (filters: FilterIssuesDTO): Promise<IssueOutput[]> => {
+        return ((await this.issueService.listIssues(filters)).map(mapper.toIssue));
     }
 
     private getPaginated = async (filters: FilterIssuesPaginatedDTO): Promise<Issue[]> => {

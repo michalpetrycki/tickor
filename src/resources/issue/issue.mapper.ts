@@ -9,6 +9,7 @@ export const toIssue = (issue: IssueOutput): Issue => {
         subject: issue.subject,
         name: issue.name,
         categoryID: issue.categoryID,
-        projectID: issue.projectID
+        projectID: issue.projectID,
+        activity: issue.Activities
     }
 }

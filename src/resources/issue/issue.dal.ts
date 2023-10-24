@@ -1,3 +1,4 @@
+import Activity from "@/resources/activity/activity.model";
 import IssueCategory from "@/resources/issue-category/issue-category.model";
 import IssueStatus from "@/resources/issue-status/issue-status.model";
 import { GetAllIssuesFilters, GetIssuesPaginatedFilters } from "@/resources/issue/issue.filter";
@@ -26,7 +27,30 @@ export const deleteIssue = async (id: number): Promise<boolean> => {
 }
 
 export const listIssues = async (filters?: GetAllIssuesFilters): Promise<IssueOutput[]> => {
-    return Issue.findAll({ where: { ...filters } });
+    return Issue.findAll({
+        include: [
+            {
+                model: Activity.scope(undefined),
+                required: true,
+                attributes: [
+                    'id',
+                    'clientID',
+                    'personID',
+                    'projectID',
+                    'issueID',
+                    'issueCategoryID',
+                    'issueStatusID',
+                    'activityDate',
+                    'updated',
+                    'activityType',
+                    'activityDetails'
+                ]
+            }
+        ],
+        where: {
+            ...filters
+        }
+    });
 }
 
 export const listPaginated = async (filters?: GetIssuesPaginatedFilters): Promise<IssueOutput[]> => {

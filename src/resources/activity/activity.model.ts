@@ -1,5 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import { connection } from '@/utils/databaseConnection';
+import Issue from '@/resources/issue/issue.model';
 
 interface ActivityAttributes {
     id: number;
