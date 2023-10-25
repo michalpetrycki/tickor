@@ -211,7 +211,7 @@ BEGIN
     SELECT @issueID = INSERTED.id FROM INSERTED
 
     INSERT INTO Activity (clientID, personID, projectID, issueID, issueCategoryID, issueStatusID, activityType)
-        VALUES (NULL, NULL, NULL, @issueID, NULL, NULL, 'create_status');
+        VALUES (NULL, NULL, NULL, @issueID, NULL, NULL, 'create_issue');
     PRINT 'Insert issue trigger fired'
 END
 GO
