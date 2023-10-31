@@ -11,13 +11,55 @@ export const createIssue = async (payload: IssueInput): Promise<IssueOutput> => 
 }
 
 export const updateIssue = async (id: number, payload: Partial<IssueInput>): Promise<IssueOutput> => {
+
     const issue = await Issue.findByPk(id);
 
     if (!issue) {
         throw new Error('id does not speciy a valid issue id');
     }
 
-    const updatedIssue = await issue.update(payload);
+    const currentProperties: IssueOutput = {
+        id: issue.id,
+        statusID: issue.statusID,
+        subject: issue.subject,
+        name: issue.name,
+        categoryID: issue.categoryID,
+        projectID: issue.projectID
+    };
+
+    const updatedProperties: IssueOutput = {
+        id,
+        statusID: payload.statusID ?? 0,
+        subject: payload.subject ?? '',
+        name: payload.name ?? '',
+        categoryID: payload.categoryID ?? 0,
+        projectID: payload.projectID ?? 0
+    };
+
+    const noChanges = JSON.stringify(currentProperties) === JSON.stringify(updatedProperties);
+
+    if (!noChanges) {
+        await issue.update(payload);
+    }
+
+    if (payload.activity) {
+        for (let activity of payload.activity) {
+
+            const existingActivity: Activity | null = await Activity.findByPk(activity.id);
+
+            if (!existingActivity) {
+                try {
+                    await Activity.create(activity);
+                }
+                catch (error: any) {
+                    throw new Error(error.message);
+                }
+            }
+
+        }
+    }
+
+    const updatedIssue = (await listIssues({ id })).pop()!
     return updatedIssue;
 }
 
@@ -27,11 +69,13 @@ export const deleteIssue = async (id: number): Promise<boolean> => {
 }
 
 export const listIssues = async (filters?: GetAllIssuesFilters): Promise<IssueOutput[]> => {
+
     return Issue.findAll({
         include: [
             {
                 model: Activity.scope(undefined),
                 required: true,
+                as: 'activity',
                 attributes: [
                     'id',
                     'clientID',

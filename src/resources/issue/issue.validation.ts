@@ -22,7 +22,6 @@ const create = Joi.object({
         'number.positive': 'projectID must be a positive number',
         'number.base': 'projectID should be an integer'
     })
-
 });
 
 const edit = create.keys(
@@ -30,7 +29,8 @@ const edit = create.keys(
         id: Joi.number().required().positive().messages({
             'number.positive': 'id must be a positivie number',
             'number.base': 'id should be an integer'
-        })
+        }),
+        activity: Joi.array().optional()
     }
 );
 

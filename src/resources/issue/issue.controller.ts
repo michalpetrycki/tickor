@@ -40,7 +40,7 @@ class IssueController implements Controller {
             this.createIssue
         );
 
-        this.router.post(
+        this.router.put(
             `${this.path}/update`,
             [validationMiddleware(validate.edit)],
             // [validationMiddleware(validate.edit), authenticated],
@@ -68,11 +68,18 @@ class IssueController implements Controller {
 
     }
 
-    private updateIssue = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    private updateIssue = async (req: Request, res: Response, next: NextFunction): Promise<Response | undefined> => {
         const { id } = req.body;
         const payload: UpdateIssueDTO = req.body;
-        const result = await this.update(id, payload);
-        return res.status(201).json({ result });
+
+        try {
+            const result = await this.update(id, payload);
+            return res.status(201).json({ result });
+        }
+        catch (error: any) {
+            next(error);
+        }
+
     }
 
     private deleteIssue = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {

@@ -25,9 +25,14 @@ function errorMiddleware(
 
     }
 
+    if (error.message) {
+        errs.push(error.message);
+    }
+
     res.status(status).send({
         status, message, errs
     });
+    
 }
 
 export default errorMiddleware;

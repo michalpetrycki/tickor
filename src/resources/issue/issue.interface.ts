@@ -1,4 +1,4 @@
-import { Activity } from "@/resources/activity/activity.interface";
+import { ActivityInput } from "@/resources/activity/activity.model";
 
 export interface Issue {
     id: number;
@@ -7,5 +7,5 @@ export interface Issue {
     subject: string;
     categoryID: number;
     projectID: number;
-    activity?: Activity;
+    activity?: ActivityInput[];
 }

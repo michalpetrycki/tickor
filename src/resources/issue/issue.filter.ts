@@ -1,6 +1,7 @@
 import { PaginationFilters } from "@/resources/shared/filters/pagination.filters";
 
 export interface GetAllIssuesFilters {
+    id?: number;
     statusID?: number;
     subject?: string;
     name?: string;    

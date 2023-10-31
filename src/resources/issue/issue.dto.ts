@@ -7,9 +7,10 @@ export type CreateIssueDTO = {
     name: string;
     categoryID: number;
     projectID: number;
+    activity: any;
 }
 
-export type UpdateIssueDTO = Optional<CreateIssueDTO, 'statusID' | 'subject' | 'name' | 'categoryID' | 'projectID'>
+export type UpdateIssueDTO = Optional<CreateIssueDTO, 'statusID' | 'subject' | 'name' | 'categoryID' | 'projectID' | 'activity'>
 
 export type FilterIssuesDTO = {
     statusID?: number;
